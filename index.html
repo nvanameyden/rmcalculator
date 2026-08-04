@@ -286,12 +286,21 @@
                 <option value="Push-ups">Push-ups (borst/triceps)</option>
                 <option value="Dips">Dips (borst/triceps)</option>
             </select>
-            
-            <label for="bwSessie">Trainingsdag (2x per week):</label>
-            <select id="bwSessie" onchange="berekenBw()">
-                <option value="volume">Sessie A: volume (spieropbouw)</option>
-                <option value="intensiteit">Sessie B: intensiteit (kracht & PR testen)</option>
+
+            <label for="bwMethode">Kies trainingsmethode:</label>
+            <select id="bwMethode" onchange="updateBwOpties(); slaOpBw();">
+                <option value="dup" selected>DUP (2x per week variëren)</option>
+                <option value="emom">EMOM (10 min. volume & uithoudingsvermogen)</option>
+                <option value="klassiek">Klassiek (3 zware sets voor spiergroei)</option>
             </select>
+            
+            <div id="bwSessieContainer">
+                <label for="bwSessie">Trainingsdag (bij DUP methode):</label>
+                <select id="bwSessie" onchange="berekenBw()">
+                    <option value="volume">Sessie A: volume (spieropbouw)</option>
+                    <option value="intensiteit">Sessie B: intensiteit (kracht & PR testen)</option>
+                </select>
+            </div>
 
             <label for="bwMax">Jouw max reps (in 1 onafgebroken set):</label>
             <input type="number" inputmode="numeric" id="bwMax" placeholder="Bijv. 10" oninput="berekenBw(); slaOpBw();">
@@ -427,11 +436,24 @@
         }
 
         // --- BODYWEIGHT LOGICA ---
+        function updateBwOpties() {
+            const methode = document.getElementById('bwMethode').value;
+            const sessieContainer = document.getElementById('bwSessieContainer');
+            if (methode === 'dup') {
+                sessieContainer.style.display = 'block';
+            } else {
+                sessieContainer.style.display = 'none';
+            }
+            berekenBw();
+        }
+
         function slaOpBw() {
             try {
                 const oefening = document.getElementById('bwOefening').value;
                 const reps = document.getElementById('bwMax').value;
+                const methode = document.getElementById('bwMethode').value;
                 localStorage.setItem('bw_max_' + oefening, reps);
+                localStorage.setItem('bw_methode_' + oefening, methode);
             } catch (e) {}
         }
 
@@ -439,18 +461,27 @@
             const oefening = document.getElementById('bwOefening').value;
             try {
                 const opgeslagenReps = localStorage.getItem('bw_max_' + oefening);
+                const opgeslagenMethode = localStorage.getItem('bw_methode_' + oefening);
+                
                 if (opgeslagenReps) {
                     document.getElementById('bwMax').value = opgeslagenReps;
                 } else {
                     document.getElementById('bwMax').value = '';
                 }
+
+                if (opgeslagenMethode) {
+                    document.getElementById('bwMethode').value = opgeslagenMethode;
+                } else {
+                    document.getElementById('bwMethode').value = 'dup';
+                }
             } catch (e) {}
-            berekenBw();
+            updateBwOpties();
         }
 
         function berekenBw() {
             const oefening = document.getElementById('bwOefening').value;
             const sessie = document.getElementById('bwSessie').value;
+            const methode = document.getElementById('bwMethode').value;
             const invoer = document.getElementById('bwMax').value;
             const maxReps = parseInt(invoer);
 
@@ -471,31 +502,62 @@
 
                 let html = "";
                 
-                if (sessie === "volume") {
-                    let targetReps = Math.max(1, Math.round(maxReps * 0.70));
-                    for (let i = 1; i <= 4; i++) {
+                if (methode === "dup") {
+                    if (sessie === "volume") {
+                        let targetReps = Math.max(1, Math.round(maxReps * 0.70));
+                        for (let i = 1; i <= 4; i++) {
+                            html += `
+                                <tr>
+                                    <td>Set ${i}</td>
+                                    <td>Werkset (70%)</td>
+                                    <td><strong>${targetReps} reps</strong></td>
+                                </tr>
+                            `;
+                        }
+                    } else {
+                        let targetReps = Math.max(1, Math.round(maxReps * 0.85));
+                        for (let i = 1; i <= 3; i++) {
+                            html += `
+                                <tr>
+                                    <td>Set ${i}</td>
+                                    <td>Werkset (85%)</td>
+                                    <td><strong>${targetReps} reps</strong></td>
+                                </tr>
+                            `;
+                        }
                         html += `
-                            <tr>
-                                <td>Set ${i}</td>
-                                <td>Werkset (70%)</td>
-                                <td><strong>${targetReps} reps</strong></td>
+                            <tr class="werkset">
+                                <td>Set 4</td>
+                                <td>🔥 AMRAP (tot falen)</td>
+                                <td><strong>Max reps!</strong></td>
                             </tr>
                         `;
                     }
-                } else {
+                } else if (methode === "emom") {
+                    let emomReps = Math.max(1, Math.round(maxReps * 0.35));
+                    for (let i = 1; i <= 10; i++) {
+                        html += `
+                            <tr>
+                                <td>Minuut ${i}</td>
+                                <td>EMOM (start elke minuut)</td>
+                                <td><strong>${emomReps} reps</strong></td>
+                            </tr>
+                        `;
+                    }
+                } else if (methode === "klassiek") {
                     let targetReps = Math.max(1, Math.round(maxReps * 0.85));
-                    for (let i = 1; i <= 3; i++) {
+                    for (let i = 1; i <= 2; i++) {
                         html += `
                             <tr>
                                 <td>Set ${i}</td>
-                                <td>Werkset (85%)</td>
+                                <td>Werkset (RIR 1 - nét niet falen)</td>
                                 <td><strong>${targetReps} reps</strong></td>
                             </tr>
                         `;
                     }
                     html += `
                         <tr class="werkset">
-                            <td>Set 4</td>
+                            <td>Set 3</td>
                             <td>🔥 AMRAP (tot falen)</td>
                             <td><strong>Max reps!</strong></td>
                         </tr>
