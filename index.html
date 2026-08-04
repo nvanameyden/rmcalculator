@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RM Calculator & 3+1 Logboek</title>
+    <title>RM calculator & 3+1 logboek</title>
     
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="icon" type="image/png" href="icon.png">
@@ -11,28 +11,28 @@
     <style>
         :root {
             /* Basis Tonal Midnight Slate Schema */
-            --bg-color: #0B1120;         /* Diep Navy/Zwart (zachter dan puur zwart) */
-            --card-bg: #1E293B;          /* Slate Grijs voor kaarten */
-            --text-color: #F8FAFC;       /* Zacht Wit */
-            --text-muted: #94A3B8;       /* Medium Slate voor hints */
-            --border-color: #334155;     /* Iets lichtere border */
+            --bg-color: #0B1120;         
+            --card-bg: #1E293B;          
+            --text-color: #F8FAFC;       
+            --text-muted: #94A3B8;       
+            --border-color: #334155;     
         }
 
-        /* Dynamische Tonaal Thema Kleuren per Tabblad (Analoog schema) */
+        /* Dynamische Tonaal Thema Kleuren per Tabblad */
         body.theme-calc {
-            --accent-color: #00E1D9;     /* Vibrant Cyaan */
+            --accent-color: #00E1D9;     
             --werkset-bg: rgba(0, 225, 217, 0.08);
             --deload-border: #00E1D9;
             --deload-color: rgba(0, 225, 217, 0.05);
         }
         body.theme-bw {
-            --accent-color: #38BDF8;     /* Sky Blue */
+            --accent-color: #38BDF8;     
             --werkset-bg: rgba(56, 189, 248, 0.08);
             --deload-border: #38BDF8;
             --deload-color: rgba(56, 189, 248, 0.05);
         }
         body.theme-log {
-            --accent-color: #A7F3D0;     /* Emerald Mint */
+            --accent-color: #A7F3D0;     
             --werkset-bg: rgba(167, 243, 208, 0.08);
             --deload-border: #A7F3D0;
             --deload-color: rgba(167, 243, 208, 0.05);
@@ -52,18 +52,15 @@
         .welcome-header {
             text-align: center;
             padding: 24px 10px;
-            /* Verloop van basis donker naar een diepe cyaan-tint */
-            background: linear-gradient(90deg, #0B1120 0%, #014745 100%);
+            background: linear-gradient(135deg, #1A2234 0%, #0B1120 100%);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             margin-bottom: 20px;
         }
 
-        /* De Verfijnde Tonal Gradient Titel */
         .welcome-header h1 {
             font-size: 1.8em;
             margin: 0;
-            /* Verfijnde gradient van Cyaan naar SkyBlue */
             background: linear-gradient(135deg, #00E1D9 0%, #38BDF8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -102,7 +99,7 @@
 
         .tab-btn.active {
             background: var(--accent-color);
-            color: #0F172A; /* Donkere Slate tekst op heldere knop */
+            color: #0F172A; 
             border-color: var(--accent-color);
         }
 
@@ -122,7 +119,6 @@
             font-weight: 700; 
             font-size: 0.75em; 
             color: var(--text-muted);
-            text-transform: uppercase;
             letter-spacing: 0.8px;
         }
 
@@ -135,7 +131,7 @@
             box-sizing: border-box; 
             font-size: 1em;
             font-weight: 600;
-            background-color: #0F172A; /* Iets donkerder dan card-bg voor inputs */
+            background-color: #0F172A; 
             color: #fff;
             appearance: none;
             transition: border-color 0.3s ease;
@@ -169,7 +165,7 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        th { font-size: 0.75em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
+        th { font-size: 0.75em; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
         
         .werkset { font-weight: bold; background-color: var(--werkset-bg); color: var(--accent-color); transition: all 0.3s ease; }
         .techniekset { color: var(--text-muted); font-style: italic; }
@@ -216,41 +212,41 @@
 <body class="theme-calc">
 
     <div class="welcome-header">
-        <h1>RM Calculator</h1>
+        <h1>RM calculator</h1>
         <p id="begroeting">Klaar voor je volgende workout!</p>
     </div>
 
     <div class="tabs">
-    <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">🏋️ Gewichten</button>
-    <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">🤸 Bodyweight</button>
-    <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">📖 Logboek</button>
-  </div>
+        <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">🏋️ Gewichten</button>
+        <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">🤸 Bodyweight</button>
+        <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">📖 Logboek</button>
+    </div>
 
     <div id="tab-calc">
         <div class="card">
-            <h2>Kracht Instellingen</h2>
+            <h2>Kracht instellingen</h2>
 
-            <label for="oefening">Kies Oefening:</label>
+            <label for="oefening">Kies oefening:</label>
             <select id="oefening" onchange="laadGegevens(); updateStijlOpties(); syncLogboekOefening();">
                 <option value="Squat">Squat</option>
-                <option value="Bench Press">Bench Press (Barbell)</option>
-                <option value="Dumbbell Press">Dumbbell Bench Press</option>
+                <option value="Bench Press">Bench press (barbell)</option>
+                <option value="Dumbbell Press">Dumbbell bench press</option>
                 <option value="Deadlift">Deadlift</option>
-                <option value="Overhead Press">Overhead Press</option>
+                <option value="Overhead Press">Overhead press</option>
                 <option value="Powerclean">Powerclean</option>
-                <option value="RDL">RDL (Romanian Deadlift)</option>
+                <option value="RDL">RDL (romanian deadlift)</option>
             </select>
             
             <label for="doelType">Doel van vandaag:</label>
             <select id="doelType" onchange="updateStijlOpties()">
-                <option value="1">1RM (Maximaal - 1 rep)</option>
-                <option value="3">3RM (Zwaar - 3 reps)</option>
-                <option value="5" selected>5RM (Kracht - 5 reps)</option>
-                <option value="6">6RM (Hypertrofie - 6 reps)</option>
-                <option value="8">8RM (Volume - 8 reps)</option>
+                <option value="1">1RM (maximaal - 1 rep)</option>
+                <option value="3">3RM (zwaar - 3 reps)</option>
+                <option value="5" selected>5RM (kracht - 5 reps)</option>
+                <option value="6">6RM (hypertrofie - 6 reps)</option>
+                <option value="8">8RM (volume - 8 reps)</option>
             </select>
 
-            <label for="warmupStijl">Warming-up Stijl:</label>
+            <label for="warmupStijl">Warming-up stijl:</label>
             <select id="warmupStijl" onchange="bereken()">
             </select>
 
@@ -261,7 +257,7 @@
         </div>
 
         <div class="card" id="warmingup-kaart" style="display:none;">
-            <h3 id="schemaTitel">Warming-up Schema</h3>
+            <h3 id="schemaTitel">Warming-up schema</h3>
             <p style="font-size: 0.8em; color: var(--text-muted); margin-bottom: 15px;">
                 Gewichten automatisch afgerond op 2.5 kg:
             </p>
@@ -282,9 +278,9 @@
 
     <div id="tab-bw" style="display:none;">
         <div class="card">
-            <h2>Bodyweight Instellingen</h2>
+            <h2>Bodyweight instellingen</h2>
 
-            <label for="bwOefening">Kies Oefening:</label>
+            <label for="bwOefening">Kies oefening:</label>
             <select id="bwOefening" onchange="laadGegevensBw(); syncLogboekBw();">
                 <option value="Pull-ups">Pull-ups (rug/biceps)</option>
                 <option value="Push-ups">Push-ups (borst/triceps)</option>
@@ -293,18 +289,18 @@
             
             <label for="bwSessie">Trainingsdag (2x per week):</label>
             <select id="bwSessie" onchange="berekenBw()">
-                <option value="volume">Sessie A: Volume (spieropbouw)</option>
-                <option value="intensiteit">Sessie B: Intensiteit (kracht & PR testen)</option>
+                <option value="volume">Sessie A: volume (spieropbouw)</option>
+                <option value="intensiteit">Sessie B: intensiteit (kracht & PR testen)</option>
             </select>
 
-            <label for="bwMax">Jouw Max Reps (in 1 onafgebroken set):</label>
+            <label for="bwMax">Jouw max reps (in 1 onafgebroken set):</label>
             <input type="number" inputmode="numeric" id="bwMax" placeholder="Bijv. 10" oninput="berekenBw(); slaOpBw();">
 
             <div id="bwUitkomst" class="resultaat" style="display:none;"></div>
         </div>
 
         <div class="card" id="bw-kaart" style="display:none;">
-            <h3 id="bwTitel">Rep Schema</h3>
+            <h3 id="bwTitel">Rep schema</h3>
             <p style="font-size: 0.8em; color: var(--text-muted); margin-bottom: 15px;">
                 Neem 1.5 tot 2 minuten rust tussen elke set.
             </p>
@@ -325,19 +321,19 @@
 
     <div id="tab-log" style="display:none;">
         <div class="card">
-            <h2>3+1 Cyclus Tracker</h2>
+            <h2>3+1 cyclus tracker</h2>
             <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px;">Bouw 3 weken op, herstel in week 4.</p>
             
-            <label for="logboekOefening">Kies Oefening:</label>
+            <label for="logboekOefening">Kies oefening:</label>
             <select id="logboekOefening" onchange="renderLogboek(); syncFromLogboek();">
                 <optgroup label="Gewichten">
                     <option value="Squat">Squat</option>
-                    <option value="Bench Press">Bench Press (Barbell)</option>
-                    <option value="Dumbbell Press">Dumbbell Bench Press</option>
+                    <option value="Bench Press">Bench press (barbell)</option>
+                    <option value="Dumbbell Press">Dumbbell bench press</option>
                     <option value="Deadlift">Deadlift</option>
-                    <option value="Overhead Press">Overhead Press</option>
+                    <option value="Overhead Press">Overhead press</option>
                     <option value="Powerclean">Powerclean</option>
-                    <option value="RDL">RDL (Romanian Deadlift)</option>
+                    <option value="RDL">RDL (romanian deadlift)</option>
                 </optgroup>
                 <optgroup label="Bodyweight">
                     <option value="Pull-ups">Pull-ups</option>
@@ -345,6 +341,17 @@
                     <option value="Dips">Dips</option>
                 </optgroup>
             </select>
+
+            <div id="logboek-doel-container">
+                <label for="logboekDoel">Trainingsdoel voor dit blok:</label>
+                <select id="logboekDoel" onchange="slaLogboekDoelOp()">
+                    <option value="1">1RM (maximaal)</option>
+                    <option value="3">3RM (zwaar)</option>
+                    <option value="5" selected>5RM (kracht)</option>
+                    <option value="6">6RM (hypertrofie)</option>
+                    <option value="8">8RM (volume)</option>
+                </select>
+            </div>
 
             <div id="logboek-content" style="margin-top: 20px;">
                 </div>
@@ -365,15 +372,12 @@
 
         // --- TABBLADEN LOGICA ---
         function switchTab(tabName) {
-            // Verander het thema (kleuren) van de body
             document.body.className = 'theme-' + tabName;
 
-            // Toon/verberg de juiste blokken
             document.getElementById('tab-calc').style.display = (tabName === 'calc') ? 'block' : 'none';
             document.getElementById('tab-bw').style.display = (tabName === 'bw') ? 'block' : 'none';
             document.getElementById('tab-log').style.display = (tabName === 'log') ? 'block' : 'none';
             
-            // Activeer de juiste knop
             document.getElementById('btn-tab-calc').classList.toggle('active', tabName === 'calc');
             document.getElementById('btn-tab-bw').classList.toggle('active', tabName === 'bw');
             document.getElementById('btn-tab-log').classList.toggle('active', tabName === 'log');
@@ -403,7 +407,7 @@
             }
         }
 
-        function laadInCalculator(waarde, oefening) {
+        function laadInCalculator(waarde, oefening, doel) {
             if (bwOefeningen.includes(oefening)) {
                 document.getElementById('bwOefening').value = oefening;
                 document.getElementById('logboekOefening').value = oefening;
@@ -413,6 +417,9 @@
             } else {
                 document.getElementById('oefening').value = oefening;
                 document.getElementById('logboekOefening').value = oefening;
+                if (doel) {
+                    document.getElementById('doelType').value = doel;
+                }
                 document.getElementById('oneRM').value = waarde;
                 switchTab('calc');
                 updateStijlOpties();
@@ -458,7 +465,7 @@
 
                 uitkomstDiv.innerHTML = `
                     Oefening: <strong style="color:var(--accent-color);">${oefening}</strong><br>
-                    Jouw Max (basis): <strong>${maxReps} reps</strong>
+                    Jouw max (basis): <strong>${maxReps} reps</strong>
                 `;
                 bwTitel.innerText = `Schema: ${oefening}`;
 
@@ -489,7 +496,7 @@
                     html += `
                         <tr class="werkset">
                             <td>Set 4</td>
-                            <td>🔥 AMRAP (Tot falen)</td>
+                            <td>🔥 AMRAP (tot falen)</td>
                             <td><strong>Max reps!</strong></td>
                         </tr>
                     `;
@@ -517,9 +524,18 @@
             } catch(e) {}
         }
 
+        function slaLogboekDoelOp() {
+            const oefening = document.getElementById('logboekOefening').value;
+            if (!logboekData[oefening]) {
+                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:'', doel: '5'}, history: [] };
+            }
+            logboekData[oefening].current.doel = document.getElementById('logboekDoel').value;
+            slaLogboekOp();
+        }
+
         function saveWeek(weekKey, oefening) {
             if (!logboekData[oefening]) {
-                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:''}, history: [] };
+                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:'', doel: '5'}, history: [] };
             }
             let inputVal = document.getElementById('input_' + weekKey).value.replace(',', '.');
             logboekData[oefening].current[weekKey] = inputVal;
@@ -533,7 +549,7 @@
             
             if (current.w1 || current.w2 || current.w3 || current.w4) {
                 logboekData[oefening].history.push({...current}); 
-                logboekData[oefening].current = {w1:'', w2:'', w3:'', w4:''};
+                logboekData[oefening].current = {w1:'', w2:'', w3:'', w4:'', doel: current.doel || '5'};
                 slaLogboekOp();
                 renderLogboek();
             } else {
@@ -546,11 +562,26 @@
             const isBw = bwOefeningen.includes(oefening);
             const unit = isBw ? "reps" : "kg";
 
-            if (!logboekData[oefening]) {
-                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:''}, history: [] };
+            const doelContainer = document.getElementById('logboek-doel-container');
+            if (isBw) {
+                doelContainer.style.display = 'none';
+            } else {
+                doelContainer.style.display = 'block';
             }
+
+            if (!logboekData[oefening]) {
+                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:'', doel: '5'}, history: [] };
+            }
+            if (!logboekData[oefening].current.doel) {
+                logboekData[oefening].current.doel = '5';
+            }
+
             const current = logboekData[oefening].current;
             const history = logboekData[oefening].history;
+
+            if (!isBw) {
+                document.getElementById('logboekDoel').value = current.doel;
+            }
 
             let w1Val = parseFloat(current.w1) || 0;
             let sugW2 = "", sugW3 = "", sugW4 = "";
@@ -569,11 +600,11 @@
                 }
             }
 
-            let html = `<h3>Huidig Blok (${oefening})</h3>`;
-            html += createWeekRow('Week 1 (Opbouw)', 'w1', current.w1, oefening, `Start (${unit})`);
-            html += createWeekRow('Week 2 (Zwaarder)', 'w2', current.w2, oefening, sugW2 ? `Advies: ${sugW2} ${unit}` : `Doel (${unit})`);
-            html += createWeekRow('Week 3 (Piek)', 'w3', current.w3, oefening, sugW3 ? `Advies: ${sugW3} ${unit}` : `Doel (${unit})`);
-            html += createWeekRow('Week 4 (Deload)', 'w4', current.w4, oefening, sugW4 ? `Advies: ${sugW4} ${unit}` : `Doel (${unit})`, true);
+            let html = `<h3>Huidig blok (${oefening})</h3>`;
+            html += createWeekRow('Week 1 (opbouw)', 'w1', current.w1, oefening, `Start (${unit})`, false, current.doel);
+            html += createWeekRow('Week 2 (zwaarder)', 'w2', current.w2, oefening, sugW2 ? `Advies: ${sugW2} ${unit}` : `Doel (${unit})`, false, current.doel);
+            html += createWeekRow('Week 3 (piek)', 'w3', current.w3, oefening, sugW3 ? `Advies: ${sugW3} ${unit}` : `Doel (${unit})`, false, current.doel);
+            html += createWeekRow('Week 4 (deload)', 'w4', current.w4, oefening, sugW4 ? `Advies: ${sugW4} ${unit}` : `Doel (${unit})`, true, current.doel);
 
             html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:14px; margin-top:15px; background:var(--accent-color); border:none; border-radius:10px; color:#0F172A; font-weight:800; cursor:pointer;">Blok afronden & opslaan</button>`;
 
@@ -581,8 +612,10 @@
                 html += `<h3 style="margin-top:30px;">Historie (${oefening})</h3>`;
                 history.slice().reverse().forEach((blok, index) => { 
                     let realIndex = history.length - index;
+                    let blokDoelTitel = (!isBw && blok.doel) ? `(${blok.doel}RM)` : '';
+                    
                     html += `<div class="resultaat" style="margin-top:12px; font-size:0.85em;">
-                        <strong style="color:var(--accent-color);">Blok ${realIndex}</strong><br>
+                        <strong style="color:var(--accent-color);">Blok ${realIndex} ${blokDoelTitel}</strong><br>
                         <span style="color:var(--text-muted);">W1:</span> ${blok.w1 || '-'} ${unit} | 
                         <span style="color:var(--text-muted);">W2:</span> ${blok.w2 || '-'} ${unit} | 
                         <span style="color:var(--text-muted);">W3:</span> ${blok.w3 || '-'} ${unit} | 
@@ -593,7 +626,7 @@
             document.getElementById('logboek-content').innerHTML = html;
         }
 
-        function createWeekRow(title, weekKey, value, oefening, placeholder, isDeload = false) {
+        function createWeekRow(title, weekKey, value, oefening, placeholder, isDeload = false, doel = '5') {
             let cssClass = isDeload ? 'logboek-card deload' : 'logboek-card';
             
             return `
@@ -603,7 +636,7 @@
                         <input type="text" inputmode="decimal" id="input_${weekKey}" value="${value}" placeholder="${placeholder}" style="flex:1; margin-top:0;">
                         <button onclick="saveWeek('${weekKey}', '${oefening}')" class="btn-save">Opslaan</button>
                     </div>
-                    ${value ? `<button onclick="laadInCalculator('${value}', '${oefening}')" class="btn-calc">Genereer Schema</button>` : ''}
+                    ${value ? `<button onclick="laadInCalculator('${value}', '${oefening}', '${doel}')" class="btn-calc">Genereer schema 🚀</button>` : ''}
                 </div>
             `;
         }
@@ -617,11 +650,11 @@
 
             let tekst = "";
             if (totaalMinuten < 12 * 60) {
-                tekst = "Goedemorgen! Tijd om aan te gaan trainen.";
+                tekst = "Goedemorgen! Tijd om aan de bak te gaan. 🌅";
             } else if (totaalMinuten >= 12 * 60 && totaalMinuten < 17 * 60 + 30) {
-                tekst = "Goedemiddag! Tijd voor de gym.";
+                tekst = "Goedemiddag! Tijd voor een krachtige sessie. ⚡";
             } else {
-                tekst = "Goedenavond! Sluit je dag af met de gym.";
+                tekst = "Goedenavond! Sluit je dag sterk af. 🌙";
             }
             document.getElementById('begroeting').innerText = tekst;
         }
@@ -635,8 +668,8 @@
 
             if (doelType === "5" || doelType === "6" || doelType === "8") {
                 stijlSelect.innerHTML = `
-                    <option value="uitgebreid">Uitgebreid (Standaard)</option>
-                    <option value="snel">Snel (Korte sessie)</option>
+                    <option value="uitgebreid">Uitgebreid (standaard)</option>
+                    <option value="snel">Snel (korte sessie)</option>
                 `;
                 if (huidigeKeuze === "snel") {
                     stijlSelect.value = "snel";
@@ -645,7 +678,7 @@
                 }
             } else {
                 stijlSelect.innerHTML = `
-                    <option value="uitgebreid" selected>Uitgebreid (Verplicht bij 1RM/3RM)</option>
+                    <option value="uitgebreid" selected>Uitgebreid (verplicht bij 1RM/3RM)</option>
                 `;
             }
             
@@ -729,7 +762,7 @@
 
                 uitkomstDiv.innerHTML = `
                     Oefening: <strong style="color:var(--accent-color);">${oefening}</strong><br>
-                    Basispunt (1RM of Invoer): <strong>${opgemaakt1RM}</strong><br>
+                    Basispunt (1RM of invoer): <strong>${opgemaakt1RM}</strong><br>
                     Doel ${doelType}RM (${percentageVan1RM}%): <strong>${opgemaaktDoelGewicht}</strong>
                 `;
 
@@ -739,84 +772,7 @@
 
                 if (warmupStijl === "snel" && (doelType === "5" || doelType === "6" || doelType === "8")) {
                     warmupSets = [
-                        { naam: "Set 1 (Licht)", pct: 0.50, reps: "6" },
-                        { naam: "Set 2 (Prikkel)", pct: 0.75, reps: "3" },
-                        { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                        { naam: "Set 1 (licht)", pct: 0.50, reps: "6" },
+                        { naam: "Set 2 (prikkel)", pct: 0.75, reps: "3" },
+                        { naam: `🔥 Werkset (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
                     ];
-                } else {
-                    if (doelType === "1") {
-                        warmupSets = [
-                            { naam: "Set 1 (Zeer Licht)", pct: 0.40, reps: "6" },
-                            { naam: "Set 2 (Licht)", pct: 0.55, reps: "5" },
-                            { naam: "Set 3 (Opbouw)", pct: 0.70, reps: "3" },
-                            { naam: "Set 4 (Zwaar)", pct: 0.85, reps: "2" },
-                            { naam: "Set 5 (Prikkel)", pct: 0.93, reps: "1" },
-                            { naam: "🔥 WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
-                        ];
-                    } else if (doelType === "3") {
-                        warmupSets = [
-                            { naam: "Set 1 (Licht)", pct: 0.50, reps: "8" },
-                            { naam: "Set 2 (Opbouw)", pct: 0.70, reps: "5" },
-                            { naam: "Set 3 (Zwaar)", pct: 0.82, reps: "3" },
-                            { naam: "Set 4 (Prikkel)", pct: 0.92, reps: "1" },
-                            { naam: "🔥 WERKSET (3RM)", pct: 1.00, reps: "3", isWerkset: true }
-                        ];
-                    } else if (doelType === "5" || doelType === "6" || doelType === "8") {
-                        warmupSets = [
-                            { naam: "Set 1 (Licht)", pct: 0.45, reps: "8 - 10" },
-                            { naam: "Set 2 (Opbouw)", pct: 0.65, reps: "5" },
-                            { naam: "Set 3 (Zwaar)", pct: 0.80, reps: "3" },
-                            { naam: "Set 4 (Prikkel)", pct: 0.90, reps: "1" },
-                            { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
-                        ];
-                    }
-                }
-
-                warmupSets.unshift({ 
-                    naam: "Opwarmen (Techniek)", 
-                    pct: 0, 
-                    reps: "10 - 15", 
-                    isLegeStang: true 
-                });
-
-                let html = "";
-                warmupSets.forEach(set => {
-                    let opgemaaktSetGewicht;
-                    let rijKlasse = "";
-
-                    if (set.isLegeStang) {
-                        rijKlasse = 'class="techniekset"';
-                        if (isDumbbell) {
-                            opgemaaktSetGewicht = "Lichte dumbbells";
-                        } else if (oefening === "Deadlift" || oefening === "Powerclean") {
-                            opgemaaktSetGewicht = "40 - 60 kg (of licht)";
-                        } else {
-                            opgemaaktSetGewicht = "20 kg (Lege stang)";
-                        }
-                    } else {
-                        const berekendGewicht = targetGewicht * set.pct;
-                        opgemaaktSetGewicht = formatGewicht(berekendGewicht, isDumbbell);
-                        if (set.isWerkset) {
-                            rijKlasse = 'class="werkset"';
-                        }
-                    }
-                    
-                    html += `
-                        <tr ${rijKlasse}>
-                            <td>${set.naam}</td>
-                            <td><strong>${opgemaaktSetGewicht}</strong></td>
-                            <td>${set.reps}</td>
-                        </tr>
-                    `;
-                });
-
-                warmupTabel.innerHTML = html;
-
-            } else {
-                uitkomstDiv.style.display = 'none';
-                warmupKaart.style.display = 'none';
-            }
-        }
-    </script>
-</body>
-</html>
