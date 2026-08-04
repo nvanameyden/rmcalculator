@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IronBase 1RM & Warmup</title>
+    <title>RM Calculator 1RM & Warmup</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -116,7 +116,7 @@
 <body>
 
     <div class="welcome-header">
-        <h1>🏋️‍♂️ IronBase</h1>
+        <h1>🏋️‍♂️ RM Calculator</h1>
         <p id="begroeting">Klaar voor je volgende workout!</p>
     </div>
 
@@ -132,4 +132,239 @@
             <option value="Overhead Press">🎯 Overhead Press</option>
         </select>
         
-        <label for="doelType">Do
+        <label for="doelType">Doel van vandaag:</label>
+        <select id="doelType" onchange="updateStijlOpties()">
+            <option value="1">1RM (Maximaal - 1 rep)</option>
+            <option value="3">3RM (Zwaar - 3 reps)</option>
+            <option value="5" selected>5RM (Kracht - 5 reps)</option>
+            <option value="6">6RM (Hypertrofie - 6 reps)</option>
+            <option value="8">8RM (Volume - 8 reps)</option>
+        </select>
+
+        <label for="warmupStijl">Warming-up Stijl:</label>
+        <select id="warmupStijl" onchange="bereken()">
+            </select>
+
+        <label for="oneRM" id="oneRMLabel">Jouw 1RM (kg):</label>
+        <input type="text" inputmode="decimal" id="oneRM" placeholder="Bijv. 100" oninput="bereken(); slaOp();">
+
+        <div id="uitkomst" class="resultaat" style="display:none;"></div>
+    </div>
+
+    <div class="card" id="warmingup-kaart" style="display:none;">
+        <h3 id="schemaTitel">🔥 Warming-up Schema</h3>
+        <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 15px;">
+            Gewichten automatisch afgerond op 2.5 kg:
+        </p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Set</th>
+                    <th>Gewicht</th>
+                    <th>Reps</th>
+                </tr>
+            </thead>
+            <tbody id="warmup-tabel">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        window.onload = function() {
+            stelBegroetingIn();
+            laadGegevens();
+            updateStijlOpties();
+        };
+
+        function stelBegroetingIn() {
+            const nu = new Date();
+            const uur = nu.getHours();
+            const minuut = nu.getMinutes();
+            const totaalMinuten = uur * 60 + minuut;
+
+            let tekst = "";
+            if (totaalMinuten < 12 * 60) {
+                tekst = "Goedemorgen! Tijd om aan de bak te gaan. 🌅";
+            } else if (totaalMinuten >= 12 * 60 && totaalMinuten < 17 * 60 + 30) {
+                tekst = "Goedemiddag! Tijd voor een krachtige middag-sessie. ☀️";
+            } else {
+                tekst = "Goedenavond! Sluit je dag sterk af. 🌙";
+            }
+            document.getElementById('begroeting').innerText = tekst;
+        }
+
+        function updateStijlOpties() {
+            const doelType = document.getElementById('doelType').value;
+            const stijlSelect = document.getElementById('warmupStijl');
+            const huidigeKeuze = stijlSelect.value;
+            
+            stijlSelect.innerHTML = ''; 
+
+            if (doelType === "5" || doelType === "6" || doelType === "8") {
+                stijlSelect.innerHTML = `
+                    <option value="uitgebreid">Uitgebreid (Standaard - 4 sets)</option>
+                    <option value="snel">Snel (Korte sessie - 2 sets)</option>
+                `;
+                if (huidigeKeuze === "snel") {
+                    stijlSelect.value = "snel";
+                } else {
+                    stijlSelect.value = "uitgebreid";
+                }
+            } else {
+                stijlSelect.innerHTML = `
+                    <option value="uitgebreid" selected>Uitgebreid (Verplicht bij 1RM/3RM)</option>
+                `;
+            }
+            
+            bereken();
+        }
+
+        function rondAf2_5(gewicht) {
+            return (Math.round(gewicht / 2.5) * 2.5).toFixed(1).replace('.0', '');
+        }
+
+        function formatGewicht(gewicht, isDumbbell) {
+            const afgerond = rondAf2_5(gewicht);
+            return isDumbbell ? `2x ${afgerond} kg` : `${afgerond} kg`;
+        }
+
+        function slaOp() {
+            try {
+                const oefening = document.getElementById('oefening').value;
+                const gewicht = document.getElementById('oneRM').value;
+                localStorage.setItem('1rm_' + oefening, gewicht);
+            } catch (e) {
+                // Fail-safe
+            }
+        }
+
+        function laadGegevens() {
+            const oefening = document.getElementById('oefening').value;
+            const isDumbbell = oefening === "Dumbbell Press";
+            
+            document.getElementById('oneRMLabel').innerText = isDumbbell 
+                ? "Jouw 1RM per dumbbell (kg):" 
+                : "Jouw 1RM (kg):";
+
+            try {
+                const opgeslagenGewicht = localStorage.getItem('1rm_' + oefening);
+                if (opgeslagenGewicht) {
+                    document.getElementById('oneRM').value = opgeslagenGewicht;
+                } else {
+                    document.getElementById('oneRM').value = '';
+                }
+            } catch (e) {
+                // Fail-safe
+            }
+        }
+
+        function bereken() {
+            const oefening = document.getElementById('oefening').value;
+            const isDumbbell = oefening === "Dumbbell Press";
+            const doelType = document.getElementById('doelType').value;
+            
+            const stijlSelect = document.getElementById('warmupStijl');
+            const warmupStijl = stijlSelect ? stijlSelect.value : "uitgebreid";
+            
+            let ruweInvoer = document.getElementById('oneRM').value.replace(',', '.');
+            const oneRM = parseFloat(ruweInvoer);
+            
+            const uitkomstDiv = document.getElementById('uitkomst');
+            const warmupKaart = document.getElementById('warmingup-kaart');
+            const warmupTabel = document.getElementById('warmup-tabel');
+            const schemaTitel = document.getElementById('schemaTitel');
+
+            if (oneRM > 0) {
+                let targetGewicht = oneRM;
+                let percentageVan1RM = 100;
+
+                if (doelType === "3") {
+                    targetGewicht = oneRM / 1.10;
+                    percentageVan1RM = 91;
+                } else if (doelType === "5") {
+                    targetGewicht = oneRM / 1.167;
+                    percentageVan1RM = 86;
+                } else if (doelType === "6") {
+                    targetGewicht = oneRM / 1.20;
+                    percentageVan1RM = 83;
+                } else if (doelType === "8") {
+                    targetGewicht = oneRM / 1.267;
+                    percentageVan1RM = 79;
+                }
+
+                const opgemaaktDoelGewicht = formatGewicht(targetGewicht, isDumbbell);
+                const opgemaakt1RM = formatGewicht(oneRM, isDumbbell);
+
+                uitkomstDiv.style.display = 'block';
+                warmupKaart.style.display = 'block';
+
+                uitkomstDiv.innerHTML = `
+                    Oefening: <strong>${oefening}</strong><br>
+                    Basispunt (1RM): <strong>${opgemaakt1RM}</strong><br>
+                    Doel ${doelType}RM (${percentageVan1RM}%): <strong>${opgemaaktDoelGewicht}</strong>
+                `;
+
+                schemaTitel.innerText = `🔥 Warming-up ${oefening} (${opgemaaktDoelGewicht})`;
+
+                let warmupSets = [];
+
+                if (warmupStijl === "snel" && (doelType === "5" || doelType === "6" || doelType === "8")) {
+                    warmupSets = [
+                        { naam: "Set 1 (Licht)", pct: 0.50, reps: "6" },
+                        { naam: "Set 2 (Prikkel)", pct: 0.75, reps: "3" },
+                        { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                    ];
+                } else {
+                    if (doelType === "1") {
+                        warmupSets = [
+                            { naam: "Set 1 (Licht)", pct: 0.50, reps: "8" },
+                            { naam: "Set 2 (Opbouw)", pct: 0.70, reps: "4" },
+                            { naam: "Set 3 (Zwaar)", pct: 0.85, reps: "2" },
+                            { naam: "Set 4 (Prikkel)", pct: 0.93, reps: "1" },
+                            { naam: "🔥 WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
+                        ];
+                    } else if (doelType === "3") {
+                        warmupSets = [
+                            { naam: "Set 1 (Licht)", pct: 0.50, reps: "8" },
+                            { naam: "Set 2 (Opbouw)", pct: 0.70, reps: "5" },
+                            { naam: "Set 3 (Zwaar)", pct: 0.82, reps: "3" },
+                            { naam: "Set 4 (Prikkel)", pct: 0.92, reps: "1" },
+                            { naam: "🔥 WERKSET (3RM)", pct: 1.00, reps: "3", isWerkset: true }
+                        ];
+                    } else if (doelType === "5" || doelType === "6" || doelType === "8") {
+                        warmupSets = [
+                            { naam: "Set 1 (Licht)", pct: 0.45, reps: "8 - 10" },
+                            { naam: "Set 2 (Opbouw)", pct: 0.65, reps: "5" },
+                            { naam: "Set 3 (Zwaar)", pct: 0.80, reps: "3" },
+                            { naam: "Set 4 (Prikkel)", pct: 0.90, reps: "1" },
+                            { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                        ];
+                    }
+                }
+
+                let html = "";
+                warmupSets.forEach(set => {
+                    const berekendGewicht = targetGewicht * set.pct;
+                    const opgemaaktSetGewicht = formatGewicht(berekendGewicht, isDumbbell);
+                    const rijKlasse = set.isWerkset ? 'class="werkset"' : '';
+                    
+                    html += `
+                        <tr ${rijKlasse}>
+                            <td>${set.naam}</td>
+                            <td><strong>${opgemaaktSetGewicht}</strong></td>
+                            <td>${set.reps}</td>
+                        </tr>
+                    `;
+                });
+
+                warmupTabel.innerHTML = html;
+
+            } else {
+                uitkomstDiv.style.display = 'none';
+                warmupKaart.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
