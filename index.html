@@ -10,16 +10,32 @@
 
     <style>
         :root {
-            /* Runna-Style Kleurenschema */
-            --bg-color: #000000;         /* True Black */
-            --card-bg: #111111;          /* Zeer donker grijs (Apple style) */
-            --text-color: #ffffff;       /* Wit */
-            --text-muted: #8e8e93;       /* Subtiel grijs voor hints */
-            --accent-color: #00e5ff;     /* Sportief Neon Cyaan/Blauw */
-            --accent-hover: #00b8cc;
-            --border-color: #222222;     /* Onopvallende borders */
-            --deload-color: rgba(0, 229, 255, 0.08);
+            /* Basis Runna-Style (True Black & Dark Grey) */
+            --bg-color: #000000;         
+            --card-bg: #111111;          
+            --text-color: #ffffff;       
+            --text-muted: #8e8e93;       
+            --border-color: #222222;     
+        }
+
+        /* Dynamische Thema Kleuren per Tabblad */
+        body.theme-calc {
+            --accent-color: #00e5ff;     /* Neon Cyaan */
+            --werkset-bg: rgba(0, 229, 255, 0.08);
             --deload-border: #00e5ff;
+            --deload-color: rgba(0, 229, 255, 0.05);
+        }
+        body.theme-bw {
+            --accent-color: #ff2a5f;     /* Koraal Roze */
+            --werkset-bg: rgba(255, 42, 95, 0.08);
+            --deload-border: #ff2a5f;
+            --deload-color: rgba(255, 42, 95, 0.05);
+        }
+        body.theme-log {
+            --accent-color: #39ff14;     /* Neon Groen */
+            --werkset-bg: rgba(57, 255, 20, 0.08);
+            --deload-border: #39ff14;
+            --deload-color: rgba(57, 255, 20, 0.05);
         }
 
         body { 
@@ -30,6 +46,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease; /* Zorgt voor zachte kleurovergangen */
         }
 
         .welcome-header {
@@ -41,10 +58,14 @@
             margin-bottom: 20px;
         }
 
+        /* De Premium Gradient Titel */
         .welcome-header h1 {
-            font-size: 1.6em;
+            font-size: 1.8em;
             margin: 0;
-            color: var(--accent-color);
+            background: linear-gradient(135deg, #00e5ff 0%, #ff2a5f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
@@ -115,6 +136,7 @@
             background-color: #000000;
             color: #fff;
             appearance: none;
+            transition: border-color 0.3s ease;
         }
 
         input:focus, select:focus {
@@ -130,6 +152,7 @@
             border-radius: 10px;
             font-size: 0.95em;
             line-height: 1.5;
+            transition: border-left-color 0.3s ease;
         }
 
         table {
@@ -146,7 +169,7 @@
 
         th { font-size: 0.75em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
         
-        .werkset { font-weight: bold; background-color: rgba(0, 229, 255, 0.08); color: var(--accent-color); }
+        .werkset { font-weight: bold; background-color: var(--werkset-bg); color: var(--accent-color); transition: all 0.3s ease; }
         .techniekset { color: var(--text-muted); font-style: italic; }
 
         /* Logboek Specifieke Styling */
@@ -177,17 +200,18 @@
         .btn-calc {
             margin-top: 12px; 
             width: 100%; 
-            background: rgba(0, 229, 255, 0.1); 
+            background: var(--werkset-bg); 
             color: var(--accent-color); 
             border: 1px solid var(--accent-color); 
             padding: 12px; 
             border-radius: 10px; 
             font-weight: 700; 
             cursor: pointer;
+            transition: all 0.3s ease;
         }
     </style>
 </head>
-<body>
+<body class="theme-calc">
 
     <div class="welcome-header">
         <h1>RM Calculator</h1>
@@ -339,10 +363,15 @@
 
         // --- TABBLADEN LOGICA ---
         function switchTab(tabName) {
+            // Verander het thema (kleuren) van de body
+            document.body.className = 'theme-' + tabName;
+
+            // Toon/verberg de juiste blokken
             document.getElementById('tab-calc').style.display = (tabName === 'calc') ? 'block' : 'none';
             document.getElementById('tab-bw').style.display = (tabName === 'bw') ? 'block' : 'none';
             document.getElementById('tab-log').style.display = (tabName === 'log') ? 'block' : 'none';
             
+            // Activeer de juiste knop
             document.getElementById('btn-tab-calc').classList.toggle('active', tabName === 'calc');
             document.getElementById('btn-tab-bw').classList.toggle('active', tabName === 'bw');
             document.getElementById('btn-tab-log').classList.toggle('active', tabName === 'log');
@@ -710,7 +739,7 @@
                     warmupSets = [
                         { naam: "Set 1 (Licht)", pct: 0.50, reps: "6" },
                         { naam: "Set 2 (Prikkel)", pct: 0.75, reps: "3" },
-                        { naam: `WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                        { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
                     ];
                 } else {
                     if (doelType === "1") {
@@ -720,7 +749,7 @@
                             { naam: "Set 3 (Opbouw)", pct: 0.70, reps: "3" },
                             { naam: "Set 4 (Zwaar)", pct: 0.85, reps: "2" },
                             { naam: "Set 5 (Prikkel)", pct: 0.93, reps: "1" },
-                            { naam: "WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
+                            { naam: "🔥 WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
                         ];
                     } else if (doelType === "3") {
                         warmupSets = [
@@ -728,7 +757,7 @@
                             { naam: "Set 2 (Opbouw)", pct: 0.70, reps: "5" },
                             { naam: "Set 3 (Zwaar)", pct: 0.82, reps: "3" },
                             { naam: "Set 4 (Prikkel)", pct: 0.92, reps: "1" },
-                            { naam: "WERKSET (3RM)", pct: 1.00, reps: "3", isWerkset: true }
+                            { naam: "🔥 WERKSET (3RM)", pct: 1.00, reps: "3", isWerkset: true }
                         ];
                     } else if (doelType === "5" || doelType === "6" || doelType === "8") {
                         warmupSets = [
@@ -736,7 +765,7 @@
                             { naam: "Set 2 (Opbouw)", pct: 0.65, reps: "5" },
                             { naam: "Set 3 (Zwaar)", pct: 0.80, reps: "3" },
                             { naam: "Set 4 (Prikkel)", pct: 0.90, reps: "1" },
-                            { naam: `WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                            { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
                         ];
                     }
                 }
