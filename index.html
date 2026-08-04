@@ -285,15 +285,15 @@
 
             <label for="bwOefening">Kies Oefening:</label>
             <select id="bwOefening" onchange="laadGegevensBw(); syncLogboekBw();">
-                <option value="Pull-ups">Pull-ups (Rug/Biceps)</option>
-                <option value="Push-ups">Push-ups (Borst/Triceps)</option>
-                <option value="Dips">Dips (Borst/Triceps)</option>
+                <option value="Pull-ups">Pull-ups (rug/biceps)</option>
+                <option value="Push-ups">Push-ups (borst/triceps)</option>
+                <option value="Dips">Dips (borst/triceps)</option>
             </select>
             
             <label for="bwSessie">Trainingsdag (2x per week):</label>
             <select id="bwSessie" onchange="berekenBw()">
-                <option value="volume">Sessie A: Volume (Spieropbouw)</option>
-                <option value="intensiteit">Sessie B: Intensiteit (Kracht & PR Testen)</option>
+                <option value="volume">Sessie A: Volume (spieropbouw)</option>
+                <option value="intensiteit">Sessie B: Intensiteit (kracht & PR testen)</option>
             </select>
 
             <label for="bwMax">Jouw Max Reps (in 1 onafgebroken set):</label>
@@ -574,7 +574,7 @@
             html += createWeekRow('Week 3 (Piek)', 'w3', current.w3, oefening, sugW3 ? `Advies: ${sugW3} ${unit}` : `Doel (${unit})`);
             html += createWeekRow('Week 4 (Deload)', 'w4', current.w4, oefening, sugW4 ? `Advies: ${sugW4} ${unit}` : `Doel (${unit})`, true);
 
-            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:14px; margin-top:15px; background:var(--accent-color); border:none; border-radius:10px; color:#0F172A; font-weight:800; cursor:pointer;">Blok Afronden & Opslaan</button>`;
+            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:14px; margin-top:15px; background:var(--accent-color); border:none; border-radius:10px; color:#0F172A; font-weight:800; cursor:pointer;">Blok afronden & opslaan</button>`;
 
             if (history.length > 0) {
                 html += `<h3 style="margin-top:30px;">Historie (${oefening})</h3>`;
