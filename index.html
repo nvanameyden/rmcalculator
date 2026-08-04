@@ -2,18 +2,24 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RM Calculator & 3+1 Logboek</title>
+    
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
-            --accent-hover: #0284c7;
-            --border-color: #334155;
-            --deload-color: rgba(34, 197, 94, 0.1);
-            --deload-border: #22c55e;
+            /* Runna-Style Kleurenschema */
+            --bg-color: #000000;         /* True Black */
+            --card-bg: #111111;          /* Zeer donker grijs (Apple style) */
+            --text-color: #ffffff;       /* Wit */
+            --text-muted: #8e8e93;       /* Subtiel grijs voor hints */
+            --accent-color: #00e5ff;     /* Sportief Neon Cyaan/Blauw */
+            --accent-hover: #00b8cc;
+            --border-color: #222222;     /* Onopvallende borders */
+            --deload-color: rgba(0, 229, 255, 0.08);
+            --deload-border: #00e5ff;
         }
 
         body { 
@@ -23,28 +29,31 @@
             margin: auto; 
             background-color: var(--bg-color);
             color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
         }
 
         .welcome-header {
             text-align: center;
-            padding: 20px 10px;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 24px 10px;
+            background: linear-gradient(145deg, #161616 0%, #000000 100%);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .welcome-header h1 {
-            font-size: 1.5em;
+            font-size: 1.6em;
             margin: 0;
             color: var(--accent-color);
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .welcome-header p {
             font-size: 0.85em;
-            color: #94a3b8;
+            color: var(--text-muted);
             margin: 6px 0 0 0;
+            font-weight: 500;
         }
 
         /* Tabs Styling */
@@ -56,21 +65,21 @@
 
         .tab-btn {
             flex: 1;
-            padding: 10px 4px;
+            padding: 12px 4px;
             background: var(--card-bg);
-            color: #94a3b8;
+            color: var(--text-muted);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 0.8em;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
         .tab-btn.active {
             background: var(--accent-color);
-            color: #0f172a;
+            color: #000000;
             border-color: var(--accent-color);
         }
 
@@ -80,31 +89,32 @@
             border-radius: 16px;
             border: 1px solid var(--border-color);
             margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        h2, h3 { margin-top: 0; color: #fff; }
+        h2, h3 { margin-top: 0; color: #fff; font-weight: 700; letter-spacing: -0.3px; }
         
         label { 
             display: block; 
             margin-top: 15px; 
-            font-weight: 600; 
-            font-size: 0.85em; 
-            color: #cbd5e1;
+            font-weight: 700; 
+            font-size: 0.75em; 
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
         input, select { 
             width: 100%; 
-            padding: 12px; 
-            margin-top: 6px; 
+            padding: 14px; 
+            margin-top: 8px; 
             border: 1px solid var(--border-color); 
-            border-radius: 8px; 
+            border-radius: 10px; 
             box-sizing: border-box; 
             font-size: 1em;
-            background-color: #0f172a;
+            font-weight: 600;
+            background-color: #000000;
             color: #fff;
+            appearance: none;
         }
 
         input:focus, select:focus {
@@ -113,12 +123,13 @@
         }
 
         .resultaat { 
-            background-color: #0c4a6e; 
+            background-color: #0a0a0a; 
             border-left: 4px solid var(--accent-color); 
-            padding: 14px; 
+            padding: 16px; 
             margin-top: 20px; 
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95em;
+            line-height: 1.5;
         }
 
         table {
@@ -129,21 +140,21 @@
 
         th, td {
             text-align: left;
-            padding: 12px 8px;
+            padding: 14px 8px;
             border-bottom: 1px solid var(--border-color);
         }
 
-        th { font-size: 0.75em; text-transform: uppercase; color: #94a3b8; }
+        th { font-size: 0.75em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
         
-        .werkset { font-weight: bold; background-color: rgba(56, 189, 248, 0.15); color: var(--accent-color); }
-        .techniekset { color: #94a3b8; font-style: italic; }
+        .werkset { font-weight: bold; background-color: rgba(0, 229, 255, 0.08); color: var(--accent-color); }
+        .techniekset { color: var(--text-muted); font-style: italic; }
 
         /* Logboek Specifieke Styling */
         .logboek-card {
-            padding: 12px; 
-            margin-top: 10px; 
-            border-radius: 8px; 
-            background-color: var(--bg-color); 
+            padding: 16px; 
+            margin-top: 12px; 
+            border-radius: 12px; 
+            background-color: #0a0a0a; 
             border: 1px solid var(--border-color);
         }
         .logboek-card.deload {
@@ -153,22 +164,25 @@
         }
         .btn-save {
             background: var(--accent-color); 
-            color: #0f172a; 
+            color: #000000; 
             border: none; 
-            padding: 0 15px; 
-            border-radius: 8px; 
-            font-weight: bold; 
+            padding: 0 16px; 
+            border-radius: 10px; 
+            font-weight: 800; 
             cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .btn-save:hover { opacity: 0.8; }
+        
         .btn-calc {
-            margin-top: 8px; 
+            margin-top: 12px; 
             width: 100%; 
-            background: rgba(56, 189, 248, 0.15); 
+            background: rgba(0, 229, 255, 0.1); 
             color: var(--accent-color); 
             border: 1px solid var(--accent-color); 
-            padding: 8px; 
-            border-radius: 8px; 
-            font-weight: bold; 
+            padding: 12px; 
+            border-radius: 10px; 
+            font-weight: 700; 
             cursor: pointer;
         }
     </style>
@@ -181,14 +195,14 @@
     </div>
 
     <div class="tabs">
-        <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">🏋️ Gewichten</button>
-        <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">🤸 Bodyweight</button>
-        <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">📖 Logboek</button>
+        <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">Gewichten</button>
+        <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">Bodyweight</button>
+        <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">Logboek</button>
     </div>
 
     <div id="tab-calc">
         <div class="card">
-            <h2>1. Kracht Instellingen</h2>
+            <h2>Kracht Instellingen</h2>
 
             <label for="oefening">Kies Oefening:</label>
             <select id="oefening" onchange="laadGegevens(); updateStijlOpties(); syncLogboekOefening();">
@@ -221,8 +235,8 @@
         </div>
 
         <div class="card" id="warmingup-kaart" style="display:none;">
-            <h3 id="schemaTitel">🔥 Warming-up Schema</h3>
-            <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 15px;">
+            <h3 id="schemaTitel">Warming-up Schema</h3>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin-bottom: 15px;">
                 Gewichten automatisch afgerond op 2.5 kg:
             </p>
             
@@ -242,7 +256,7 @@
 
     <div id="tab-bw" style="display:none;">
         <div class="card">
-            <h2>1. Bodyweight Instellingen</h2>
+            <h2>Bodyweight Instellingen</h2>
 
             <label for="bwOefening">Kies Oefening:</label>
             <select id="bwOefening" onchange="laadGegevensBw(); syncLogboekBw();">
@@ -253,7 +267,7 @@
             
             <label for="bwSessie">Trainingsdag (2x per week):</label>
             <select id="bwSessie" onchange="berekenBw()">
-                <option value="volume">Sessie A: Volume (Spieropbouw & Techniek)</option>
+                <option value="volume">Sessie A: Volume (Spieropbouw)</option>
                 <option value="intensiteit">Sessie B: Intensiteit (Kracht & PR Testen)</option>
             </select>
 
@@ -264,8 +278,8 @@
         </div>
 
         <div class="card" id="bw-kaart" style="display:none;">
-            <h3 id="bwTitel">🔥 Rep Schema</h3>
-            <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 15px;">
+            <h3 id="bwTitel">Rep Schema</h3>
+            <p style="font-size: 0.8em; color: var(--text-muted); margin-bottom: 15px;">
                 Neem 1.5 tot 2 minuten rust tussen elke set.
             </p>
             
@@ -286,7 +300,7 @@
     <div id="tab-log" style="display:none;">
         <div class="card">
             <h2>3+1 Cyclus Tracker</h2>
-            <p style="font-size: 0.85em; color: #94a3b8; margin-bottom: 15px;">Bouw 3 weken op, herstel in week 4.</p>
+            <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px;">Bouw 3 weken op, herstel in week 4.</p>
             
             <label for="logboekOefening">Kies Oefening:</label>
             <select id="logboekOefening" onchange="renderLogboek(); syncFromLogboek();">
@@ -412,15 +426,14 @@
                 bwKaart.style.display = 'block';
 
                 uitkomstDiv.innerHTML = `
-                    Oefening: <strong>${oefening}</strong><br>
+                    Oefening: <strong style="color:var(--accent-color);">${oefening}</strong><br>
                     Jouw Max (basis): <strong>${maxReps} reps</strong>
                 `;
-                bwTitel.innerText = `🔥 Schema: ${oefening}`;
+                bwTitel.innerText = `Schema: ${oefening}`;
 
                 let html = "";
                 
                 if (sessie === "volume") {
-                    // Sessie A: 4 sets van 70%
                     let targetReps = Math.max(1, Math.round(maxReps * 0.70));
                     for (let i = 1; i <= 4; i++) {
                         html += `
@@ -432,7 +445,6 @@
                         `;
                     }
                 } else {
-                    // Sessie B: 3 sets van 85% + 1 set AMRAP
                     let targetReps = Math.max(1, Math.round(maxReps * 0.85));
                     for (let i = 1; i <= 3; i++) {
                         html += `
@@ -443,7 +455,6 @@
                             </tr>
                         `;
                     }
-                    // De Max / AMRAP set
                     html += `
                         <tr class="werkset">
                             <td>Set 4</td>
@@ -515,13 +526,11 @@
             
             if (w1Val > 0) {
                 if (isBw) {
-                    // Bodyweight progressie: gewoon +1 rep per week, en deload is 65% van reps
                     sugW2 = Math.round(w1Val + 1);
                     sugW3 = Math.round(w1Val + 2);
                     let w3Val = parseFloat(current.w3) || sugW3 || 0;
                     sugW4 = w3Val > 0 ? Math.max(1, Math.round(w3Val * 0.65)) : "";
                 } else {
-                    // Gewichten progressie: +2.5% en +5%
                     sugW2 = rondAf2_5(w1Val * 1.025);
                     sugW3 = rondAf2_5(w1Val * 1.050);
                     let w3Val = parseFloat(current.w3) || parseFloat(sugW3) || 0;
@@ -535,18 +544,18 @@
             html += createWeekRow('Week 3 (Piek)', 'w3', current.w3, oefening, sugW3 ? `Advies: ${sugW3} ${unit}` : `Doel (${unit})`);
             html += createWeekRow('Week 4 (Deload)', 'w4', current.w4, oefening, sugW4 ? `Advies: ${sugW4} ${unit}` : `Doel (${unit})`, true);
 
-            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:12px; margin-top:15px; background:var(--accent-color); border:none; border-radius:8px; color:#0f172a; font-weight:bold; cursor:pointer;">Blok Afronden & Opslaan</button>`;
+            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:14px; margin-top:15px; background:var(--accent-color); border:none; border-radius:10px; color:#000000; font-weight:800; cursor:pointer;">Blok Afronden & Opslaan</button>`;
 
             if (history.length > 0) {
                 html += `<h3 style="margin-top:30px;">Historie (${oefening})</h3>`;
                 history.slice().reverse().forEach((blok, index) => { 
                     let realIndex = history.length - index;
-                    html += `<div class="resultaat" style="margin-top:10px; font-size:0.85em; background-color: #1e293b;">
+                    html += `<div class="resultaat" style="margin-top:12px; font-size:0.85em;">
                         <strong style="color:var(--accent-color);">Blok ${realIndex}</strong><br>
-                        <span style="color:#94a3b8;">W1:</span> ${blok.w1 || '-'} ${unit} | 
-                        <span style="color:#94a3b8;">W2:</span> ${blok.w2 || '-'} ${unit} | 
-                        <span style="color:#94a3b8;">W3:</span> ${blok.w3 || '-'} ${unit} | 
-                        <span style="color:#94a3b8;">W4:</span> ${blok.w4 || '-'} ${unit}
+                        <span style="color:var(--text-muted);">W1:</span> ${blok.w1 || '-'} ${unit} | 
+                        <span style="color:var(--text-muted);">W2:</span> ${blok.w2 || '-'} ${unit} | 
+                        <span style="color:var(--text-muted);">W3:</span> ${blok.w3 || '-'} ${unit} | 
+                        <span style="color:var(--text-muted);">W4:</span> ${blok.w4 || '-'} ${unit}
                     </div>`;
                 });
             }
@@ -559,11 +568,11 @@
             return `
                 <div class="${cssClass}">
                     <strong>${title}</strong>
-                    <div style="display:flex; gap:10px; margin-top:8px;">
+                    <div style="display:flex; gap:10px; margin-top:10px;">
                         <input type="text" inputmode="decimal" id="input_${weekKey}" value="${value}" placeholder="${placeholder}" style="flex:1; margin-top:0;">
                         <button onclick="saveWeek('${weekKey}', '${oefening}')" class="btn-save">Opslaan</button>
                     </div>
-                    ${value ? `<button onclick="laadInCalculator('${value}', '${oefening}')" class="btn-calc">Genereer Schema 🚀</button>` : ''}
+                    ${value ? `<button onclick="laadInCalculator('${value}', '${oefening}')" class="btn-calc">Genereer Schema</button>` : ''}
                 </div>
             `;
         }
@@ -577,11 +586,11 @@
 
             let tekst = "";
             if (totaalMinuten < 12 * 60) {
-                tekst = "Goedemorgen! Tijd om aan de bak te gaan. 🌅";
+                tekst = "Goedemorgen! Tijd om aan de bak te gaan.";
             } else if (totaalMinuten >= 12 * 60 && totaalMinuten < 17 * 60 + 30) {
-                tekst = "Goedemiddag! Tijd voor een krachtige middag-sessie. ☀️";
+                tekst = "Goedemiddag! Tijd voor een krachtige sessie.";
             } else {
-                tekst = "Goedenavond! Sluit je dag sterk af. 🌙";
+                tekst = "Goedenavond! Sluit je dag sterk af.";
             }
             document.getElementById('begroeting').innerText = tekst;
         }
@@ -688,12 +697,12 @@
                 warmupKaart.style.display = 'block';
 
                 uitkomstDiv.innerHTML = `
-                    Oefening: <strong>${oefening}</strong><br>
+                    Oefening: <strong style="color:var(--accent-color);">${oefening}</strong><br>
                     Basispunt (1RM of Invoer): <strong>${opgemaakt1RM}</strong><br>
                     Doel ${doelType}RM (${percentageVan1RM}%): <strong>${opgemaaktDoelGewicht}</strong>
                 `;
 
-                schemaTitel.innerText = `🔥 Warming-up ${oefening} (${opgemaaktDoelGewicht})`;
+                schemaTitel.innerText = `Schema: ${oefening} (${opgemaaktDoelGewicht})`;
 
                 let warmupSets = [];
 
@@ -701,7 +710,7 @@
                     warmupSets = [
                         { naam: "Set 1 (Licht)", pct: 0.50, reps: "6" },
                         { naam: "Set 2 (Prikkel)", pct: 0.75, reps: "3" },
-                        { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                        { naam: `WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
                     ];
                 } else {
                     if (doelType === "1") {
@@ -711,7 +720,7 @@
                             { naam: "Set 3 (Opbouw)", pct: 0.70, reps: "3" },
                             { naam: "Set 4 (Zwaar)", pct: 0.85, reps: "2" },
                             { naam: "Set 5 (Prikkel)", pct: 0.93, reps: "1" },
-                            { naam: "🔥 WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
+                            { naam: "WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
                         ];
                     } else if (doelType === "3") {
                         warmupSets = [
@@ -719,7 +728,7 @@
                             { naam: "Set 2 (Opbouw)", pct: 0.70, reps: "5" },
                             { naam: "Set 3 (Zwaar)", pct: 0.82, reps: "3" },
                             { naam: "Set 4 (Prikkel)", pct: 0.92, reps: "1" },
-                            { naam: "🔥 WERKSET (3RM)", pct: 1.00, reps: "3", isWerkset: true }
+                            { naam: "WERKSET (3RM)", pct: 1.00, reps: "3", isWerkset: true }
                         ];
                     } else if (doelType === "5" || doelType === "6" || doelType === "8") {
                         warmupSets = [
@@ -727,12 +736,11 @@
                             { naam: "Set 2 (Opbouw)", pct: 0.65, reps: "5" },
                             { naam: "Set 3 (Zwaar)", pct: 0.80, reps: "3" },
                             { naam: "Set 4 (Prikkel)", pct: 0.90, reps: "1" },
-                            { naam: `🔥 WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
+                            { naam: `WERKSET (${doelType}RM)`, pct: 1.00, reps: doelType, isWerkset: true }
                         ];
                     }
                 }
 
-                // Altijd de Techniek set als allereerste toevoegen
                 warmupSets.unshift({ 
                     naam: "Opwarmen (Techniek)", 
                     pct: 0, 
