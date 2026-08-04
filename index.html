@@ -224,7 +224,7 @@
 
     <div id="tab-calc">
         <div class="card">
-            <h2>Kracht instellingen</h2>
+            <h2>Kracht oefeningen</h2>
 
             <label for="oefening">Kies oefening:</label>
             <select id="oefening" onchange="laadGegevens(); updateStijlOpties(); syncLogboekOefening();">
@@ -278,7 +278,7 @@
 
     <div id="tab-bw" style="display:none;">
         <div class="card">
-            <h2>Bodyweight instellingen</h2>
+            <h2>Bodyweight oefeningen</h2>
 
             <label for="bwOefening">Kies oefening:</label>
             <select id="bwOefening" onchange="laadGegevensBw(); syncLogboekBw();">
@@ -321,7 +321,7 @@
 
     <div id="tab-log" style="display:none;">
         <div class="card">
-            <h2>3+1 cyclus tracker</h2>
+            <h2>3+1 cyclus logboek</h2>
             <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px;">Bouw 3 weken op, herstel in week 4.</p>
             
             <label for="logboekOefening">Kies oefening:</label>
@@ -650,11 +650,11 @@
 
             let tekst = "";
             if (totaalMinuten < 12 * 60) {
-                tekst = "Goedemorgen! Tijd om aan de bak te gaan. 🌅";
+                tekst = "Goedemorgen!Start de dag met een gym sessie. 🌅";
             } else if (totaalMinuten >= 12 * 60 && totaalMinuten < 17 * 60 + 30) {
-                tekst = "Goedemiddag! Tijd voor een krachtige sessie. ⚡";
+                tekst = "Goedemiddag! Tijd voor een gym sessie. ⚡";
             } else {
-                tekst = "Goedenavond! Sluit je dag sterk af. 🌙";
+                tekst = "Goedenavond! Sluit je dag af in de gym. 🌙";
             }
             document.getElementById('begroeting').innerText = tekst;
         }
