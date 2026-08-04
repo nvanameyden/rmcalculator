@@ -207,6 +207,47 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
+        /* Styling voor Quotes en Feedback */
+        .quote-container {
+            text-align: center;
+            padding: 20px;
+            margin-top: 10px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .quote-container span {
+            display: block;
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--accent-color);
+            transition: color 0.3s ease;
+        }
+        .feedback-container {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+        .btn-feedback {
+            display: inline-block;
+            background: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-feedback:hover {
+            border-color: var(--accent-color);
+            color: var(--text-color);
+        }
     </style>
 </head>
 <body class="theme-calc">
@@ -368,9 +409,29 @@
         </div>
     </div>
 
+    <div class="quote-container">
+        <p id="random-quote">"..."</p>
+        <span id="quote-author">- ...</span>
+    </div>
+
+    <div class="feedback-container">
+        <a href="https://forms.gle/5vUankkTyDDwMDc99" target="_blank" class="btn-feedback">✉️ Feedback of ideeën?</a>
+    </div>
+
     <script>
         let logboekData = {};
         const bwOefeningen = ["Pull-ups", "Push-ups", "Dips"];
+
+        // Lijst met motiverende sport quotes
+        const quotes = [
+            { text: "No man has the right to be an amateur in the matter of physical training. It is a shame for a man to grow old without seeing the beauty and strength of which his body is capable.", author: "Socrates" },
+            { text: "The hard days are the best because that's when champions are made.", author: "Gabby Douglas" },
+            { text: "Some people want it to happen, some wish it would happen, others make it happen.", author: "Michael Jordan" },
+            { text: "Blood, sweat and respect. First two you give, last one you earn.", author: "Dwayne 'The Rock' Johnson" },
+            { text: "I hated every minute of training, but I said, 'Don't quit. Suffer now and live the rest of your life as a champion.'", author: "Muhammad Ali" },
+            { text: "Strength does not come from winning. Your struggles develop your strengths.", author: "Arnold Schwarzenegger" },
+            { text: "It’s not about perfect. It’s about effort. And when you bring that effort every single day, that’s where transformation happens.", author: "Jillian Michaels" }
+        ];
 
         window.onload = function() {
             stelBegroetingIn();
@@ -378,7 +439,15 @@
             laadGegevensBw();
             updateStijlOpties();
             initLogboek();
+            toonRandomQuote();
         };
+
+        // --- QUOTE LOGICA ---
+        function toonRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById('random-quote').innerText = `"${quotes[randomIndex].text}"`;
+            document.getElementById('quote-author').innerText = `- ${quotes[randomIndex].author}`;
+        }
 
         // --- TABBLADEN LOGICA ---
         function switchTab(tabName) {
@@ -736,7 +805,7 @@
 
             let tekst = "";
             if (totaalMinuten < 12 * 60) {
-                tekst = "Goedemorgen!Start de dag met een gym sessie. 🌅";
+                tekst = "Goedemorgen! Start de dag met een gym sessie. 🌅";
             } else if (totaalMinuten >= 12 * 60 && totaalMinuten < 17 * 60 + 30) {
                 tekst = "Goedemiddag! Tijd voor een gym sessie. ⚡";
             } else {
