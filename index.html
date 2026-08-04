@@ -292,6 +292,7 @@
                 <option value="dup" selected>DUP (2x per week variëren)</option>
                 <option value="emom">EMOM (10 min. volume & uithoudingsvermogen)</option>
                 <option value="klassiek">Klassiek (3 zware sets voor spiergroei)</option>
+                <option value="piramide">Piramide (volume op- en afbouwen)</option>
             </select>
             
             <div id="bwSessieContainer">
@@ -562,6 +563,29 @@
                             <td><strong>Max reps!</strong></td>
                         </tr>
                     `;
+                } else if (methode === "piramide") {
+                    let peak = Math.max(2, Math.round(maxReps * 0.60));
+                    let setNum = 1;
+                    for (let i = 1; i <= peak; i++) {
+                        html += `
+                            <tr>
+                                <td>Set ${setNum}</td>
+                                <td>Piramide (opbouwen)</td>
+                                <td><strong>${i} reps</strong></td>
+                            </tr>
+                        `;
+                        setNum++;
+                    }
+                    for (let i = peak - 1; i >= 1; i--) {
+                        html += `
+                            <tr>
+                                <td>Set ${setNum}</td>
+                                <td>Piramide (afbouwen)</td>
+                                <td><strong>${i} reps</strong></td>
+                            </tr>
+                        `;
+                        setNum++;
+                    }
                 }
 
                 bwTabel.innerHTML = html;
