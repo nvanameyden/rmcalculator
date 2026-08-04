@@ -111,6 +111,11 @@
             background-color: rgba(56, 189, 248, 0.15); 
             color: var(--accent-color);
         }
+
+        .techniekset {
+            color: #94a3b8;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -143,7 +148,7 @@
 
         <label for="warmupStijl">Warming-up Stijl:</label>
         <select id="warmupStijl" onchange="bereken()">
-            </select>
+        </select>
 
         <label for="oneRM" id="oneRMLabel">Jouw 1RM (kg):</label>
         <input type="text" inputmode="decimal" id="oneRM" placeholder="Bijv. 100" oninput="bereken(); slaOp();">
@@ -203,8 +208,8 @@
 
             if (doelType === "5" || doelType === "6" || doelType === "8") {
                 stijlSelect.innerHTML = `
-                    <option value="uitgebreid">Uitgebreid (Standaard - 4 sets)</option>
-                    <option value="snel">Snel (Korte sessie - 2 sets)</option>
+                    <option value="uitgebreid">Uitgebreid (Standaard)</option>
+                    <option value="snel">Snel (Korte sessie)</option>
                 `;
                 if (huidigeKeuze === "snel") {
                     stijlSelect.value = "snel";
@@ -234,9 +239,7 @@
                 const oefening = document.getElementById('oefening').value;
                 const gewicht = document.getElementById('oneRM').value;
                 localStorage.setItem('1rm_' + oefening, gewicht);
-            } catch (e) {
-                // Fail-safe
-            }
+            } catch (e) {}
         }
 
         function laadGegevens() {
@@ -254,9 +257,7 @@
                 } else {
                     document.getElementById('oneRM').value = '';
                 }
-            } catch (e) {
-                // Fail-safe
-            }
+            } catch (e) {}
         }
 
         function bereken() {
@@ -317,11 +318,13 @@
                     ];
                 } else {
                     if (doelType === "1") {
+                        // De nieuwe 5-staps opbouw speciaal voor de zware 1RM
                         warmupSets = [
-                            { naam: "Set 1 (Licht)", pct: 0.50, reps: "8" },
-                            { naam: "Set 2 (Opbouw)", pct: 0.70, reps: "4" },
-                            { naam: "Set 3 (Zwaar)", pct: 0.85, reps: "2" },
-                            { naam: "Set 4 (Prikkel)", pct: 0.93, reps: "1" },
+                            { naam: "Set 1 (Zeer Licht)", pct: 0.40, reps: "6" },
+                            { naam: "Set 2 (Licht)", pct: 0.55, reps: "5" },
+                            { naam: "Set 3 (Opbouw)", pct: 0.70, reps: "3" },
+                            { naam: "Set 4 (Zwaar)", pct: 0.85, reps: "2" },
+                            { naam: "Set 5 (Prikkel)", pct: 0.93, reps: "1" },
                             { naam: "🔥 WERKSET (1RM)", pct: 1.00, reps: "1", isWerkset: true }
                         ];
                     } else if (doelType === "3") {
@@ -343,11 +346,35 @@
                     }
                 }
 
+                // Voeg de Lege Stang / Techniek set toe aan het BEGIN van elke reeks
+                warmupSets.unshift({ 
+                    naam: "Opwarmen (Techniek)", 
+                    pct: 0, 
+                    reps: "10 - 15", 
+                    isLegeStang: true 
+                });
+
                 let html = "";
                 warmupSets.forEach(set => {
-                    const berekendGewicht = targetGewicht * set.pct;
-                    const opgemaaktSetGewicht = formatGewicht(berekendGewicht, isDumbbell);
-                    const rijKlasse = set.isWerkset ? 'class="werkset"' : '';
+                    let opgemaaktSetGewicht;
+                    let rijKlasse = "";
+
+                    if (set.isLegeStang) {
+                        rijKlasse = 'class="techniekset"';
+                        if (isDumbbell) {
+                            opgemaaktSetGewicht = "Lichte dumbbells";
+                        } else if (oefening === "Deadlift") {
+                            opgemaaktSetGewicht = "60 kg (of licht)";
+                        } else {
+                            opgemaaktSetGewicht = "20 kg (Lege stang)";
+                        }
+                    } else {
+                        const berekendGewicht = targetGewicht * set.pct;
+                        opgemaaktSetGewicht = formatGewicht(berekendGewicht, isDumbbell);
+                        if (set.isWerkset) {
+                            rijKlasse = 'class="werkset"';
+                        }
+                    }
                     
                     html += `
                         <tr ${rijKlasse}>
