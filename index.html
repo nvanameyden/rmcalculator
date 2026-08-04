@@ -220,10 +220,10 @@
     </div>
 
     <div class="tabs">
-        <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">Gewichten</button>
-        <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">Bodyweight</button>
-        <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">Logboek</button>
-    </div>
+    <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">🏋️ Gewichten</button>
+    <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">🤸 Bodyweight</button>
+    <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">📖 Logboek</button>
+  </div>
 
     <div id="tab-calc">
         <div class="card">
@@ -616,11 +616,11 @@
 
             let tekst = "";
             if (totaalMinuten < 12 * 60) {
-                tekst = "Goedemorgen! Tijd om aan de bak te gaan.";
+                tekst = "Goedemorgen! Tijd om aan te gaan trainen.";
             } else if (totaalMinuten >= 12 * 60 && totaalMinuten < 17 * 60 + 30) {
-                tekst = "Goedemiddag! Tijd voor een krachtige sessie.";
+                tekst = "Goedemiddag! Tijd voor de gym.";
             } else {
-                tekst = "Goedenavond! Sluit je dag sterk af.";
+                tekst = "Goedenavond! Sluit je dag af met de gym.";
             }
             document.getElementById('begroeting').innerText = tekst;
         }
