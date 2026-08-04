@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RM Calculator 1RM & Warmup</title>
+    <title>RM Calculator & 3+1 Logboek</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -12,6 +12,8 @@
             --accent-color: #38bdf8;
             --accent-hover: #0284c7;
             --border-color: #334155;
+            --deload-color: rgba(34, 197, 94, 0.1);
+            --deload-border: #22c55e;
         }
 
         body { 
@@ -43,6 +45,33 @@
             font-size: 0.85em;
             color: #94a3b8;
             margin: 6px 0 0 0;
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 4px;
+            background: var(--card-bg);
+            color: #94a3b8;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: #0f172a;
+            border-color: var(--accent-color);
         }
 
         .card {
@@ -106,82 +135,440 @@
 
         th { font-size: 0.75em; text-transform: uppercase; color: #94a3b8; }
         
-        .werkset { 
-            font-weight: bold; 
-            background-color: rgba(56, 189, 248, 0.15); 
-            color: var(--accent-color);
-        }
+        .werkset { font-weight: bold; background-color: rgba(56, 189, 248, 0.15); color: var(--accent-color); }
+        .techniekset { color: #94a3b8; font-style: italic; }
 
-        .techniekset {
-            color: #94a3b8;
-            font-style: italic;
+        /* Logboek Specifieke Styling */
+        .logboek-card {
+            padding: 12px; 
+            margin-top: 10px; 
+            border-radius: 8px; 
+            background-color: var(--bg-color); 
+            border: 1px solid var(--border-color);
+        }
+        .logboek-card.deload {
+            background-color: var(--deload-color); 
+            border: 1px solid var(--deload-border);
+            border-left: 4px solid var(--deload-border);
+        }
+        .btn-save {
+            background: var(--accent-color); 
+            color: #0f172a; 
+            border: none; 
+            padding: 0 15px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer;
+        }
+        .btn-calc {
+            margin-top: 8px; 
+            width: 100%; 
+            background: rgba(56, 189, 248, 0.15); 
+            color: var(--accent-color); 
+            border: 1px solid var(--accent-color); 
+            padding: 8px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <div class="welcome-header">
-        <h1>🏋️‍♂️ RM Calculator</h1>
+        <h1>RM Calculator</h1>
         <p id="begroeting">Klaar voor je volgende workout!</p>
     </div>
 
-    <div class="card">
-        <h2>1. Instellingen</h2>
-
-        <label for="oefening">Kies Oefening:</label>
-        <select id="oefening" onchange="laadGegevens(); updateStijlOpties();">
-            <option value="Squat">🏋️ Squat</option>
-            <option value="Bench Press">🏋️‍♂️ Bench Press (Barbell)</option>
-            <option value="Dumbbell Press">🏋️‍♂️ Dumbbell Bench Press</option>
-            <option value="Deadlift">⚡ Deadlift</option>
-            <option value="Overhead Press">🎯 Overhead Press</option>
-        </select>
-        
-        <label for="doelType">Doel van vandaag:</label>
-        <select id="doelType" onchange="updateStijlOpties()">
-            <option value="1">1RM (Maximaal - 1 rep)</option>
-            <option value="3">3RM (Zwaar - 3 reps)</option>
-            <option value="5" selected>5RM (Kracht - 5 reps)</option>
-            <option value="6">6RM (Hypertrofie - 6 reps)</option>
-            <option value="8">8RM (Volume - 8 reps)</option>
-        </select>
-
-        <label for="warmupStijl">Warming-up Stijl:</label>
-        <select id="warmupStijl" onchange="bereken()">
-        </select>
-
-        <label for="oneRM" id="oneRMLabel">Jouw 1RM (kg):</label>
-        <input type="text" inputmode="decimal" id="oneRM" placeholder="Bijv. 100" oninput="bereken(); slaOp();">
-
-        <div id="uitkomst" class="resultaat" style="display:none;"></div>
+    <div class="tabs">
+        <button id="btn-tab-calc" class="tab-btn active" onclick="switchTab('calc')">🏋️ Gewichten</button>
+        <button id="btn-tab-bw" class="tab-btn" onclick="switchTab('bw')">🤸 Bodyweight</button>
+        <button id="btn-tab-log" class="tab-btn" onclick="switchTab('log')">📖 Logboek</button>
     </div>
 
-    <div class="card" id="warmingup-kaart" style="display:none;">
-        <h3 id="schemaTitel">🔥 Warming-up Schema</h3>
-        <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 15px;">
-            Gewichten automatisch afgerond op 2.5 kg:
-        </p>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Set</th>
-                    <th>Gewicht</th>
-                    <th>Reps</th>
-                </tr>
-            </thead>
-            <tbody id="warmup-tabel">
-            </tbody>
-        </table>
+    <div id="tab-calc">
+        <div class="card">
+            <h2>1. Kracht Instellingen</h2>
+
+            <label for="oefening">Kies Oefening:</label>
+            <select id="oefening" onchange="laadGegevens(); updateStijlOpties(); syncLogboekOefening();">
+                <option value="Squat">Squat</option>
+                <option value="Bench Press">Bench Press (Barbell)</option>
+                <option value="Dumbbell Press">Dumbbell Bench Press</option>
+                <option value="Deadlift">Deadlift</option>
+                <option value="Overhead Press">Overhead Press</option>
+                <option value="Powerclean">Powerclean</option>
+                <option value="RDL">RDL (Romanian Deadlift)</option>
+            </select>
+            
+            <label for="doelType">Doel van vandaag:</label>
+            <select id="doelType" onchange="updateStijlOpties()">
+                <option value="1">1RM (Maximaal - 1 rep)</option>
+                <option value="3">3RM (Zwaar - 3 reps)</option>
+                <option value="5" selected>5RM (Kracht - 5 reps)</option>
+                <option value="6">6RM (Hypertrofie - 6 reps)</option>
+                <option value="8">8RM (Volume - 8 reps)</option>
+            </select>
+
+            <label for="warmupStijl">Warming-up Stijl:</label>
+            <select id="warmupStijl" onchange="bereken()">
+            </select>
+
+            <label for="oneRM" id="oneRMLabel">Jouw 1RM (kg):</label>
+            <input type="text" inputmode="decimal" id="oneRM" placeholder="Bijv. 100" oninput="bereken(); slaOp();">
+
+            <div id="uitkomst" class="resultaat" style="display:none;"></div>
+        </div>
+
+        <div class="card" id="warmingup-kaart" style="display:none;">
+            <h3 id="schemaTitel">🔥 Warming-up Schema</h3>
+            <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 15px;">
+                Gewichten automatisch afgerond op 2.5 kg:
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Set</th>
+                        <th>Gewicht</th>
+                        <th>Reps</th>
+                    </tr>
+                </thead>
+                <tbody id="warmup-tabel">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-bw" style="display:none;">
+        <div class="card">
+            <h2>1. Bodyweight Instellingen</h2>
+
+            <label for="bwOefening">Kies Oefening:</label>
+            <select id="bwOefening" onchange="laadGegevensBw(); syncLogboekBw();">
+                <option value="Pull-ups">Pull-ups (Rug/Biceps)</option>
+                <option value="Push-ups">Push-ups (Borst/Triceps)</option>
+                <option value="Dips">Dips (Borst/Triceps)</option>
+            </select>
+            
+            <label for="bwSessie">Trainingsdag (2x per week):</label>
+            <select id="bwSessie" onchange="berekenBw()">
+                <option value="volume">Sessie A: Volume (Spieropbouw & Techniek)</option>
+                <option value="intensiteit">Sessie B: Intensiteit (Kracht & PR Testen)</option>
+            </select>
+
+            <label for="bwMax">Jouw Max Reps (in 1 onafgebroken set):</label>
+            <input type="number" inputmode="numeric" id="bwMax" placeholder="Bijv. 10" oninput="berekenBw(); slaOpBw();">
+
+            <div id="bwUitkomst" class="resultaat" style="display:none;"></div>
+        </div>
+
+        <div class="card" id="bw-kaart" style="display:none;">
+            <h3 id="bwTitel">🔥 Rep Schema</h3>
+            <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 15px;">
+                Neem 1.5 tot 2 minuten rust tussen elke set.
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Set</th>
+                        <th>Type</th>
+                        <th>Doel</th>
+                    </tr>
+                </thead>
+                <tbody id="bw-tabel">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab-log" style="display:none;">
+        <div class="card">
+            <h2>3+1 Cyclus Tracker</h2>
+            <p style="font-size: 0.85em; color: #94a3b8; margin-bottom: 15px;">Bouw 3 weken op, herstel in week 4.</p>
+            
+            <label for="logboekOefening">Kies Oefening:</label>
+            <select id="logboekOefening" onchange="renderLogboek(); syncFromLogboek();">
+                <optgroup label="Gewichten">
+                    <option value="Squat">Squat</option>
+                    <option value="Bench Press">Bench Press (Barbell)</option>
+                    <option value="Dumbbell Press">Dumbbell Bench Press</option>
+                    <option value="Deadlift">Deadlift</option>
+                    <option value="Overhead Press">Overhead Press</option>
+                    <option value="Powerclean">Powerclean</option>
+                    <option value="RDL">RDL (Romanian Deadlift)</option>
+                </optgroup>
+                <optgroup label="Bodyweight">
+                    <option value="Pull-ups">Pull-ups</option>
+                    <option value="Push-ups">Push-ups</option>
+                    <option value="Dips">Dips</option>
+                </optgroup>
+            </select>
+
+            <div id="logboek-content" style="margin-top: 20px;">
+                </div>
+        </div>
     </div>
 
     <script>
+        let logboekData = {};
+        const bwOefeningen = ["Pull-ups", "Push-ups", "Dips"];
+
         window.onload = function() {
             stelBegroetingIn();
             laadGegevens();
+            laadGegevensBw();
             updateStijlOpties();
+            initLogboek();
         };
 
+        // --- TABBLADEN LOGICA ---
+        function switchTab(tabName) {
+            document.getElementById('tab-calc').style.display = (tabName === 'calc') ? 'block' : 'none';
+            document.getElementById('tab-bw').style.display = (tabName === 'bw') ? 'block' : 'none';
+            document.getElementById('tab-log').style.display = (tabName === 'log') ? 'block' : 'none';
+            
+            document.getElementById('btn-tab-calc').classList.toggle('active', tabName === 'calc');
+            document.getElementById('btn-tab-bw').classList.toggle('active', tabName === 'bw');
+            document.getElementById('btn-tab-log').classList.toggle('active', tabName === 'log');
+
+            if (tabName === 'log') {
+                renderLogboek();
+            }
+        }
+
+        // --- SYNCHRONISATIE TUSSEN TABS ---
+        function syncLogboekOefening() {
+            document.getElementById('logboekOefening').value = document.getElementById('oefening').value;
+        }
+
+        function syncLogboekBw() {
+            document.getElementById('logboekOefening').value = document.getElementById('bwOefening').value;
+        }
+
+        function syncFromLogboek() {
+            const oefening = document.getElementById('logboekOefening').value;
+            if (bwOefeningen.includes(oefening)) {
+                document.getElementById('bwOefening').value = oefening;
+                laadGegevensBw();
+            } else {
+                document.getElementById('oefening').value = oefening;
+                laadGegevens();
+            }
+        }
+
+        function laadInCalculator(waarde, oefening) {
+            if (bwOefeningen.includes(oefening)) {
+                document.getElementById('bwOefening').value = oefening;
+                document.getElementById('logboekOefening').value = oefening;
+                document.getElementById('bwMax').value = waarde;
+                switchTab('bw');
+                berekenBw();
+            } else {
+                document.getElementById('oefening').value = oefening;
+                document.getElementById('logboekOefening').value = oefening;
+                document.getElementById('oneRM').value = waarde;
+                switchTab('calc');
+                updateStijlOpties();
+            }
+        }
+
+        // --- BODYWEIGHT LOGICA ---
+        function slaOpBw() {
+            try {
+                const oefening = document.getElementById('bwOefening').value;
+                const reps = document.getElementById('bwMax').value;
+                localStorage.setItem('bw_max_' + oefening, reps);
+            } catch (e) {}
+        }
+
+        function laadGegevensBw() {
+            const oefening = document.getElementById('bwOefening').value;
+            try {
+                const opgeslagenReps = localStorage.getItem('bw_max_' + oefening);
+                if (opgeslagenReps) {
+                    document.getElementById('bwMax').value = opgeslagenReps;
+                } else {
+                    document.getElementById('bwMax').value = '';
+                }
+            } catch (e) {}
+            berekenBw();
+        }
+
+        function berekenBw() {
+            const oefening = document.getElementById('bwOefening').value;
+            const sessie = document.getElementById('bwSessie').value;
+            const invoer = document.getElementById('bwMax').value;
+            const maxReps = parseInt(invoer);
+
+            const uitkomstDiv = document.getElementById('bwUitkomst');
+            const bwKaart = document.getElementById('bw-kaart');
+            const bwTabel = document.getElementById('bw-tabel');
+            const bwTitel = document.getElementById('bwTitel');
+
+            if (maxReps > 0) {
+                uitkomstDiv.style.display = 'block';
+                bwKaart.style.display = 'block';
+
+                uitkomstDiv.innerHTML = `
+                    Oefening: <strong>${oefening}</strong><br>
+                    Jouw Max (basis): <strong>${maxReps} reps</strong>
+                `;
+                bwTitel.innerText = `🔥 Schema: ${oefening}`;
+
+                let html = "";
+                
+                if (sessie === "volume") {
+                    // Sessie A: 4 sets van 70%
+                    let targetReps = Math.max(1, Math.round(maxReps * 0.70));
+                    for (let i = 1; i <= 4; i++) {
+                        html += `
+                            <tr>
+                                <td>Set ${i}</td>
+                                <td>Werkset (70%)</td>
+                                <td><strong>${targetReps} reps</strong></td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    // Sessie B: 3 sets van 85% + 1 set AMRAP
+                    let targetReps = Math.max(1, Math.round(maxReps * 0.85));
+                    for (let i = 1; i <= 3; i++) {
+                        html += `
+                            <tr>
+                                <td>Set ${i}</td>
+                                <td>Werkset (85%)</td>
+                                <td><strong>${targetReps} reps</strong></td>
+                            </tr>
+                        `;
+                    }
+                    // De Max / AMRAP set
+                    html += `
+                        <tr class="werkset">
+                            <td>Set 4</td>
+                            <td>🔥 AMRAP (Tot falen)</td>
+                            <td><strong>Max reps!</strong></td>
+                        </tr>
+                    `;
+                }
+
+                bwTabel.innerHTML = html;
+            } else {
+                uitkomstDiv.style.display = 'none';
+                bwKaart.style.display = 'none';
+            }
+        }
+
+
+        // --- LOGBOEK LOGICA ---
+        function initLogboek() {
+            try {
+                const data = localStorage.getItem('ironbase_logboek');
+                if (data) logboekData = JSON.parse(data);
+            } catch(e) {}
+        }
+
+        function slaLogboekOp() {
+            try {
+                localStorage.setItem('ironbase_logboek', JSON.stringify(logboekData));
+            } catch(e) {}
+        }
+
+        function saveWeek(weekKey, oefening) {
+            if (!logboekData[oefening]) {
+                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:''}, history: [] };
+            }
+            let inputVal = document.getElementById('input_' + weekKey).value.replace(',', '.');
+            logboekData[oefening].current[weekKey] = inputVal;
+            slaLogboekOp();
+            renderLogboek(); 
+        }
+
+        function finishBlock(oefening) {
+            if (!logboekData[oefening]) return;
+            const current = logboekData[oefening].current;
+            
+            if (current.w1 || current.w2 || current.w3 || current.w4) {
+                logboekData[oefening].history.push({...current}); 
+                logboekData[oefening].current = {w1:'', w2:'', w3:'', w4:''};
+                slaLogboekOp();
+                renderLogboek();
+            } else {
+                alert("Vul eerst gewichten/reps in voordat je het blok afrondt.");
+            }
+        }
+
+        function renderLogboek() {
+            const oefening = document.getElementById('logboekOefening').value;
+            const isBw = bwOefeningen.includes(oefening);
+            const unit = isBw ? "reps" : "kg";
+
+            if (!logboekData[oefening]) {
+                logboekData[oefening] = { current: {w1:'', w2:'', w3:'', w4:''}, history: [] };
+            }
+            const current = logboekData[oefening].current;
+            const history = logboekData[oefening].history;
+
+            let w1Val = parseFloat(current.w1) || 0;
+            let sugW2 = "", sugW3 = "", sugW4 = "";
+            
+            if (w1Val > 0) {
+                if (isBw) {
+                    // Bodyweight progressie: gewoon +1 rep per week, en deload is 65% van reps
+                    sugW2 = Math.round(w1Val + 1);
+                    sugW3 = Math.round(w1Val + 2);
+                    let w3Val = parseFloat(current.w3) || sugW3 || 0;
+                    sugW4 = w3Val > 0 ? Math.max(1, Math.round(w3Val * 0.65)) : "";
+                } else {
+                    // Gewichten progressie: +2.5% en +5%
+                    sugW2 = rondAf2_5(w1Val * 1.025);
+                    sugW3 = rondAf2_5(w1Val * 1.050);
+                    let w3Val = parseFloat(current.w3) || parseFloat(sugW3) || 0;
+                    sugW4 = w3Val > 0 ? rondAf2_5(w3Val * 0.65) : "";
+                }
+            }
+
+            let html = `<h3>Huidig Blok (${oefening})</h3>`;
+            html += createWeekRow('Week 1 (Opbouw)', 'w1', current.w1, oefening, `Start (${unit})`);
+            html += createWeekRow('Week 2 (Zwaarder)', 'w2', current.w2, oefening, sugW2 ? `Advies: ${sugW2} ${unit}` : `Doel (${unit})`);
+            html += createWeekRow('Week 3 (Piek)', 'w3', current.w3, oefening, sugW3 ? `Advies: ${sugW3} ${unit}` : `Doel (${unit})`);
+            html += createWeekRow('Week 4 (Deload)', 'w4', current.w4, oefening, sugW4 ? `Advies: ${sugW4} ${unit}` : `Doel (${unit})`, true);
+
+            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:12px; margin-top:15px; background:var(--accent-color); border:none; border-radius:8px; color:#0f172a; font-weight:bold; cursor:pointer;">Blok Afronden & Opslaan</button>`;
+
+            if (history.length > 0) {
+                html += `<h3 style="margin-top:30px;">Historie (${oefening})</h3>`;
+                history.slice().reverse().forEach((blok, index) => { 
+                    let realIndex = history.length - index;
+                    html += `<div class="resultaat" style="margin-top:10px; font-size:0.85em; background-color: #1e293b;">
+                        <strong style="color:var(--accent-color);">Blok ${realIndex}</strong><br>
+                        <span style="color:#94a3b8;">W1:</span> ${blok.w1 || '-'} ${unit} | 
+                        <span style="color:#94a3b8;">W2:</span> ${blok.w2 || '-'} ${unit} | 
+                        <span style="color:#94a3b8;">W3:</span> ${blok.w3 || '-'} ${unit} | 
+                        <span style="color:#94a3b8;">W4:</span> ${blok.w4 || '-'} ${unit}
+                    </div>`;
+                });
+            }
+            document.getElementById('logboek-content').innerHTML = html;
+        }
+
+        function createWeekRow(title, weekKey, value, oefening, placeholder, isDeload = false) {
+            let cssClass = isDeload ? 'logboek-card deload' : 'logboek-card';
+            
+            return `
+                <div class="${cssClass}">
+                    <strong>${title}</strong>
+                    <div style="display:flex; gap:10px; margin-top:8px;">
+                        <input type="text" inputmode="decimal" id="input_${weekKey}" value="${value}" placeholder="${placeholder}" style="flex:1; margin-top:0;">
+                        <button onclick="saveWeek('${weekKey}', '${oefening}')" class="btn-save">Opslaan</button>
+                    </div>
+                    ${value ? `<button onclick="laadInCalculator('${value}', '${oefening}')" class="btn-calc">Genereer Schema 🚀</button>` : ''}
+                </div>
+            `;
+        }
+
+        // --- CALCULATOR LOGICA (GEWICHTEN) ---
         function stelBegroetingIn() {
             const nu = new Date();
             const uur = nu.getHours();
@@ -302,7 +689,7 @@
 
                 uitkomstDiv.innerHTML = `
                     Oefening: <strong>${oefening}</strong><br>
-                    Basispunt (1RM): <strong>${opgemaakt1RM}</strong><br>
+                    Basispunt (1RM of Invoer): <strong>${opgemaakt1RM}</strong><br>
                     Doel ${doelType}RM (${percentageVan1RM}%): <strong>${opgemaaktDoelGewicht}</strong>
                 `;
 
@@ -318,7 +705,6 @@
                     ];
                 } else {
                     if (doelType === "1") {
-                        // De nieuwe 5-staps opbouw speciaal voor de zware 1RM
                         warmupSets = [
                             { naam: "Set 1 (Zeer Licht)", pct: 0.40, reps: "6" },
                             { naam: "Set 2 (Licht)", pct: 0.55, reps: "5" },
@@ -346,7 +732,7 @@
                     }
                 }
 
-                // Voeg de Lege Stang / Techniek set toe aan het BEGIN van elke reeks
+                // Altijd de Techniek set als allereerste toevoegen
                 warmupSets.unshift({ 
                     naam: "Opwarmen (Techniek)", 
                     pct: 0, 
@@ -363,8 +749,8 @@
                         rijKlasse = 'class="techniekset"';
                         if (isDumbbell) {
                             opgemaaktSetGewicht = "Lichte dumbbells";
-                        } else if (oefening === "Deadlift") {
-                            opgemaaktSetGewicht = "60 kg (of licht)";
+                        } else if (oefening === "Deadlift" || oefening === "Powerclean") {
+                            opgemaaktSetGewicht = "40 - 60 kg (of licht)";
                         } else {
                             opgemaaktSetGewicht = "20 kg (Lege stang)";
                         }
