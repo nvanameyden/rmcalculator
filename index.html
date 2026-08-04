@@ -10,32 +10,32 @@
 
     <style>
         :root {
-            /* Basis Runna-Style (True Black & Dark Grey) */
-            --bg-color: #000000;         
-            --card-bg: #111111;          
-            --text-color: #ffffff;       
-            --text-muted: #8e8e93;       
-            --border-color: #222222;     
+            /* Basis Tonal Midnight Slate Schema */
+            --bg-color: #0B1120;         /* Diep Navy/Zwart (zachter dan puur zwart) */
+            --card-bg: #1E293B;          /* Slate Grijs voor kaarten */
+            --text-color: #F8FAFC;       /* Zacht Wit */
+            --text-muted: #94A3B8;       /* Medium Slate voor hints */
+            --border-color: #334155;     /* Iets lichtere border */
         }
 
-        /* Dynamische Thema Kleuren per Tabblad */
+        /* Dynamische Tonaal Thema Kleuren per Tabblad (Analoog schema) */
         body.theme-calc {
-            --accent-color: #00e5ff;     /* Neon Cyaan */
-            --werkset-bg: rgba(0, 229, 255, 0.08);
-            --deload-border: #00e5ff;
-            --deload-color: rgba(0, 229, 255, 0.05);
+            --accent-color: #00E1D9;     /* Vibrant Cyaan */
+            --werkset-bg: rgba(0, 225, 217, 0.08);
+            --deload-border: #00E1D9;
+            --deload-color: rgba(0, 225, 217, 0.05);
         }
         body.theme-bw {
-            --accent-color: #ff2a5f;     /* Koraal Roze */
-            --werkset-bg: rgba(255, 42, 95, 0.08);
-            --deload-border: #ff2a5f;
-            --deload-color: rgba(255, 42, 95, 0.05);
+            --accent-color: #38BDF8;     /* Sky Blue */
+            --werkset-bg: rgba(56, 189, 248, 0.08);
+            --deload-border: #38BDF8;
+            --deload-color: rgba(56, 189, 248, 0.05);
         }
         body.theme-log {
-            --accent-color: #39ff14;     /* Neon Groen */
-            --werkset-bg: rgba(57, 255, 20, 0.08);
-            --deload-border: #39ff14;
-            --deload-color: rgba(57, 255, 20, 0.05);
+            --accent-color: #A7F3D0;     /* Emerald Mint */
+            --werkset-bg: rgba(167, 243, 208, 0.08);
+            --deload-border: #A7F3D0;
+            --deload-color: rgba(167, 243, 208, 0.05);
         }
 
         body { 
@@ -46,23 +46,24 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             -webkit-font-smoothing: antialiased;
-            transition: all 0.3s ease; /* Zorgt voor zachte kleurovergangen */
+            transition: all 0.3s ease; 
         }
 
         .welcome-header {
             text-align: center;
             padding: 24px 10px;
-            background: linear-gradient(145deg, #161616 0%, #000000 100%);
+            background: linear-gradient(145deg, #1A2234 0%, #0B1120 100%);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             margin-bottom: 20px;
         }
 
-        /* De Premium Gradient Titel */
+        /* De Verfijnde Tonal Gradient Titel */
         .welcome-header h1 {
             font-size: 1.8em;
             margin: 0;
-            background: linear-gradient(135deg, #00e5ff 0%, #ff2a5f 100%);
+            /* Verfijnde gradient van Cyaan naar SkyBlue */
+            background: linear-gradient(135deg, #00E1D9 0%, #38BDF8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -100,7 +101,7 @@
 
         .tab-btn.active {
             background: var(--accent-color);
-            color: #000000;
+            color: #0F172A; /* Donkere Slate tekst op heldere knop */
             border-color: var(--accent-color);
         }
 
@@ -133,7 +134,7 @@
             box-sizing: border-box; 
             font-size: 1em;
             font-weight: 600;
-            background-color: #000000;
+            background-color: #0F172A; /* Iets donkerder dan card-bg voor inputs */
             color: #fff;
             appearance: none;
             transition: border-color 0.3s ease;
@@ -145,7 +146,7 @@
         }
 
         .resultaat { 
-            background-color: #0a0a0a; 
+            background-color: #0F172A; 
             border-left: 4px solid var(--accent-color); 
             padding: 16px; 
             margin-top: 20px; 
@@ -177,7 +178,7 @@
             padding: 16px; 
             margin-top: 12px; 
             border-radius: 12px; 
-            background-color: #0a0a0a; 
+            background-color: #0F172A; 
             border: 1px solid var(--border-color);
         }
         .logboek-card.deload {
@@ -187,7 +188,7 @@
         }
         .btn-save {
             background: var(--accent-color); 
-            color: #000000; 
+            color: #0F172A; 
             border: none; 
             padding: 0 16px; 
             border-radius: 10px; 
@@ -573,7 +574,7 @@
             html += createWeekRow('Week 3 (Piek)', 'w3', current.w3, oefening, sugW3 ? `Advies: ${sugW3} ${unit}` : `Doel (${unit})`);
             html += createWeekRow('Week 4 (Deload)', 'w4', current.w4, oefening, sugW4 ? `Advies: ${sugW4} ${unit}` : `Doel (${unit})`, true);
 
-            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:14px; margin-top:15px; background:var(--accent-color); border:none; border-radius:10px; color:#000000; font-weight:800; cursor:pointer;">Blok Afronden & Opslaan</button>`;
+            html += `<button onclick="finishBlock('${oefening}')" style="width:100%; padding:14px; margin-top:15px; background:var(--accent-color); border:none; border-radius:10px; color:#0F172A; font-weight:800; cursor:pointer;">Blok Afronden & Opslaan</button>`;
 
             if (history.length > 0) {
                 html += `<h3 style="margin-top:30px;">Historie (${oefening})</h3>`;
